@@ -24,24 +24,31 @@ class Trick
     #[ORM\Column(type: 'text')]
     private string $description;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $category;
-
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private \DateTimeImmutable $modifiedAt;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private \DateTime $modifiedAt;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Picture::class)]
+    private Collection $pictures;
+
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class)]
+    private Collection $videos;
+
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'tricks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private Category $category;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
-
-    //TODO MEDIAS ArrayCollection, relation to media table, one Trick to many medias
 
     public function getId(): ?int
     {
@@ -72,17 +79,6 @@ class Trick
         return $this;
     }
 
-    public function getCategory(): ?string
-    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): self
-    {
-        $this->category = $category;
-
-        return $this;
-    }
 
     public function getDescription(): ?string
     {
@@ -108,12 +104,12 @@ class Trick
         return $this;
     }
 
-    public function getModifiedAt(): ?\DateTimeImmutable
+    public function getModifiedAt(): ?\DateTime
     {
-        return $this->modifiedAt;
+        return $this->modifiedAt ?? null;
     }
 
-    public function setModifiedAt(?\DateTimeImmutable $modifiedAt): self
+    public function setModifiedAt(?\DateTime $modifiedAt): self
     {
         $this->modifiedAt = $modifiedAt;
 
@@ -146,6 +142,78 @@ class Trick
                 $comment->setTrickId(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Picture>
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
+    }
+
+    public function addPicture(Picture $picture): self
+    {
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures[] = $picture;
+            $picture->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removePicture(Picture $picture): self
+    {
+        if ($this->pictures->removeElement($picture)) {
+            // set the owning side to null (unless already changed)
+            if ($picture->getTrick() === $this) {
+                $picture->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Video>
+     */
+    public function getVideos(): Collection
+    {
+        return $this->videos;
+    }
+
+    public function addVideo(Video $video): self
+    {
+        if (!$this->videos->contains($video)) {
+            $this->videos[] = $video;
+            $video->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideo(Video $video): self
+    {
+        if ($this->videos->removeElement($video)) {
+            // set the owning side to null (unless already changed)
+            if ($video->getTrick() === $this) {
+                $video->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCategory(): Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

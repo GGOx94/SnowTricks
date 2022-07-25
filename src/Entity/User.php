@@ -30,12 +30,14 @@ class User
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
+    //TODO status (signing_up / admin / banned / regular)
+    //TODO avatar
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
     }
 
-    // TODO COMMENTS entities, relations --> one user, multiple comments, each linked to a Trick
     // TODO update entity & put tokens (signup / passwd change) here ?
 
     public function getId(): ?int
