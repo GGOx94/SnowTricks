@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ObjectManager;
@@ -18,8 +19,18 @@ class TricksFixtures extends Fixture
         // $product = new Product();
         // $manager->persist($product);
 
+        $categs = new ArrayCollection();
         $tricks = new ArrayCollection();
         $slugger = new AsciiSlugger();
+
+        // Create categories (trick groups)
+        for($a=0; $a <= 5; $a++)
+        {
+            $categ = new Category();
+            $categ->setLabel("Catégorie no. " . $a);
+            $categs[] = $categ;
+            $manager->persist($categ);
+        }
 
         // Create tricks
         for($i=1; $i <= 5; $i++)
@@ -28,7 +39,7 @@ class TricksFixtures extends Fixture
             $trick->setTitle("Titre trick : " . $i)
                 ->setSlug($slugger->slug($trick->getTitle()))
                 ->setDescription("<p>Description trick : ".$i."</p>")
-                ->setCategory("TODO-CATEG")
+                ->setCategory($categs[mt_rand(0, $categs->count() - 1)])
                 ->setCreatedAt(new \DateTimeImmutable());
 
             $tricks->add($trick);

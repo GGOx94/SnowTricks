@@ -6,21 +6,40 @@
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .banner-container { position: relative; }
+    .banner-container .btn {
+        position: absolute;
+        bottom:25%;
+        right:2%;
+        color: white;
+        font-size: 16px;
+        padding: 18px 72px;
+        border: none;
+        cursor: pointer;
+        border-radius: 25px;
+        border-left: 75px;
+        border-right: 75px;
+    }
 </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {# TODO : fix image height & width to 100% screen including navbar#}
+    <div class="banner-container container-fluid px-0">
+        <div class="row mx-0">
+            <div class="col-12 px-0">
+                <img src="/medias/banner.png" class="img-fluid w-100">
+            </div>
+        </div>
+        {# TODO: down arrow icon #}
+        <a href="#tricks" class="banner-button btn btn-info" >V V V</a>
+    </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'D:/xampp/htdocs/p6-snowtricks/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'D:/xampp/htdocs/p6-snowtricks/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <h1 class="text-center" style="margin: 80px;">Tricks !</h1>
 
-    <br>--------------------------------<br>
-
+    {# - - - TRICKS SECTION - - - #}
+    <div id="tricks">
     {%  for trick in tricks %}
+
+        <hr><br>
         <h2>{{ trick.title|raw }}</h2>
         <div>
             <p>
@@ -29,6 +48,7 @@
             <small>Trick créé le : {{ trick.createdAt|date("m/d/Y") }}</small>
             <a href="/trick/{{ trick.slug }}">Voir le trick</a>
         </div>
-    {% endfor %}
 
+    {% endfor %}
+    </div>
 {% endblock %}

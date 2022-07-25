@@ -13,7 +13,7 @@ class Comment
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'content')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
     private User $author;
 
