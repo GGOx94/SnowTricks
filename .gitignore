@@ -7,12 +7,8 @@
 /public/bundles/
 /var/
 /vendor/
+/notes.txt
 ###< symfony/framework-bundle ###
-
-###> phpunit/phpunit ###
-/phpunit.xml
-.phpunit.result.cache
-###< phpunit/phpunit ###
 
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
@@ -21,5 +17,5 @@
 
 ###> IDE ###
 .idea/
-/notes.txt
+
 ###< IDE ###
