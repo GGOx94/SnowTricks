@@ -7,7 +7,6 @@
 /public/bundles/
 /var/
 /vendor/
-/notes.txt
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
@@ -17,5 +16,9 @@
 
 ###> IDE ###
 .idea/
-
 ###< IDE ###
+
+###> TMP ###
+/notes.txt
+/tmp/
+###< TMP ###

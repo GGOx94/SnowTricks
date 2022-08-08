@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TrickController!{% endblock %}
+{% block title %}{{ trick.title }}{% endblock %}
 
 {% block body %}
 
@@ -99,7 +99,7 @@
 
         <div class="comment">
             <div class="author col-2">
-                <img src="/upload/avatars/{{ com.author.avatar }}">
+                <img src="{{ avatarDirectory }}{{ com.author.avatar }}">
                 <p>{{ com.author.name }}</p>
             </div>
             <div class="content col-10 px-0 mx-0">
