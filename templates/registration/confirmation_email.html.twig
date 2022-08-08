@@ -1,0 +1,13 @@
+{% set verify_token_url = absolute_url(path('app_verify_email_token', {token: token})) %}
+
+<h1>Bonjour {{ user.name }}, confirmez votre adresse email !</h1>
+
+<p>
+    Cliquez sur le lien ci-dessous pour confirmer votre adresse email : <br><br>
+    <a href="{{ verify_token_url }}">Confirmer mon adresse email</a>.<br><br>
+    Ce lien expirera dans {{ expireHours }} heures.
+</p>
+
+<p>
+    À bientôt sur SnowTricks !
+</p>

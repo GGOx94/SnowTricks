@@ -18,6 +18,7 @@ use App\Entity\Trick;
 
 class TrickController extends AbstractController
 {
+    //TODO route edit here too, check trick->getId() for modif date / twig var edit=true
     #[Route('/trick/new', name: 'app_trick_new')]
     public function create(Request $request, EntityManagerInterface $manager): Response
     {

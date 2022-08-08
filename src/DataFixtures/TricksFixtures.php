@@ -6,6 +6,7 @@ use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 use App\Entity\Trick;
@@ -14,11 +15,15 @@ use App\Entity\User;
 
 class TricksFixtures extends Fixture
 {
+    private UserPasswordHasherInterface $usrPwdHasher;
+
+    public function __construct(UserPasswordHasherInterface  $hashItf)
+    {
+        $this->usrPwdHasher = $hashItf;
+    }
+
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
-
         $categs = new ArrayCollection();
         $tricks = new ArrayCollection();
         $slugger = new AsciiSlugger();
@@ -33,7 +38,7 @@ class TricksFixtures extends Fixture
         }
 
         // Create tricks
-        for($i=1; $i <= 5; $i++)
+        for($i=1; $i < 15; $i++)
         {
             $trick = new Trick();
             $trick->setTitle("Titre trick : " . $i)
@@ -47,18 +52,21 @@ class TricksFixtures extends Fixture
         }
 
         // Create users
-        for($j=1; $j <= 5; $j++)
+        for($j=1; $j < 8; $j++)
         {
             $usr = new User();
+            $plainPassword = "test" . $j;
             $usr->setName("user-" . $j)
-                ->setAvatar("default.png")
                 ->setEmail("user".$j."@fr.fr")
-                ->setPassword("$3cr3t".$j);
+                ->setPassword($this->usrPwdHasher->hashPassword($usr, $plainPassword))
+                ->setIsVerified(true);
+
+            $usr->addRole('ROLE_USER');
 
             $manager->persist($usr);
 
                 // Create comments from user on tricks
-                for($k=1; $k <= 5; $k++)
+                for($k=1; $k < 8; $k++)
                 {
                     $chanceToComment = mt_rand(1,3);
                     if($chanceToComment == 3)
