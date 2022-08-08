@@ -6,9 +6,14 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[UniqueEntity(fields: ('name'), message: 'Ce nom est déjà utilisé.')]
+#[UniqueEntity(fields: ('email'), message: 'Cet email est déjà utilisé.')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,7 +26,7 @@ class User
     #[ORM\Column(type: 'string', length: 100, unique: true)]
     private string $email;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $avatar; // Url of avatar in public/upload/avatars/...[png/jpg]
 
     #[ORM\Column(type: 'string', length: 64)]
@@ -30,8 +35,11 @@ class User
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
-    //TODO status (signing_up / admin / banned / regular)
-    //TODO avatar
+    #[ORM\Column(type: "json")]
+    private array $roles = [];
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isVerified = false;
 
     public function __construct()
     {
@@ -71,7 +79,8 @@ class User
 
     public function getAvatar(): ?string
     {
-        return $this->avatar;
+        //TODO make sure we cant overwrite the default avatar ([user.name]-avatar.png when uploading ?)
+        return $this->avatar ?? 'default.png';
     }
 
     public function setAvatar(string $avatar): self
@@ -93,33 +102,46 @@ class User
         return $this;
     }
 
-    /**
-     * @return Collection<int, Comment>
-     */
-    public function getContent(): Collection
+    public function getRoles(): array
     {
-        return $this->content;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
-    public function addContent(Comment $content): self
+    public function addRole(string $role)
     {
-        if (!$this->content->contains($content)) {
-            $this->content[] = $content;
-            $content->setAuthor($this);
-        }
+        $this->roles[] = $role;
+        $this->roles = array_unique($this->roles);
+    }
+
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
 
-    public function removeContent(Comment $content): self
+    public function isBanned(): bool
     {
-        if ($this->content->removeElement($content)) {
-            // set the owning side to null (unless already changed)
-            if ($content->getAuthor() === $this) {
-                $content->setAuthor(null);
-            }
-        }
-
-        return $this;
+        return isset($this->roles['ROLE_BANNED']);
     }
 }

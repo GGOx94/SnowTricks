@@ -26,6 +26,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
+            {% set userIsLogged = (app.user.name is defined) %}
+
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -34,10 +36,18 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/trick/new">Création</a>
+                        <a class="nav-link" href="{{ path('app_trick_new') }}">Création</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Connexion</a>
+                        <a class="nav-link" href="{{ path('app_login') }}">{{ userIsLogged ? 'Connecté : ' ~ app.user.name : 'Connexion' }}</a>
+                    </li>
+                    {% if not userIsLogged %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">Créer un compte</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_admin') }}">[TMP:ADMIN]</a>
                     </li>
 {#                    <li class="nav-item dropdown">#}
 {#                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>#}
