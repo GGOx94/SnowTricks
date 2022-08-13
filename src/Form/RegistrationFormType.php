@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -42,7 +43,7 @@ class RegistrationFormType extends AbstractType
                 'invalid_message' => 'Les champs de mot de passe ne correspondent pas !',
                 'first_options' => [
                      // instead of being set onto the object directly, this is read and encoded in the controller
-                    'attr' => ['class' => 'password-field'],
+                    'attr' => ['class' => 'password-field', 'label' => 'Mot de passe'],
                     'constraints' => [
                         new Assert\NotBlank([ 'message' => 'Vous devez entrez un mot de passe' ]),
                         new Assert\Length([
@@ -54,6 +55,11 @@ class RegistrationFormType extends AbstractType
                 ],
                 'required' => true,
                 'second_options' => [ 'label' => 'Répéter le mot de passe' ],
+            ])
+
+            ->add('submit', SubmitType::class, [
+                'attr' => [ 'class' => 'btn btn-success' ],
+                'label' => 'Créer un compte'
             ]);
     }
 

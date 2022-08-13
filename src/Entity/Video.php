@@ -11,14 +11,14 @@ class Video
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'videos')]
     #[ORM\JoinColumn(nullable: false)]
-    private $trick;
+    private Trick $trick;
 
-    #[ORM\Column(type: 'string', length: 1024)]
-    private $embedTag;
+    #[ORM\Column(type: 'string', length: 80)]
+    private string $embedUrl;
 
     public function getId(): ?int
     {
@@ -37,14 +37,31 @@ class Video
         return $this;
     }
 
-    public function getEmbedTag(): ?string
+    public function getEmbedUrl(): ?string
     {
-        return $this->embedTag;
+        return $this->embedUrl;
     }
 
-    public function setEmbedTag(string $embedTag): self
+    public function setEmbedUrl(string $videoUrl): self
     {
-        $this->embedTag = $embedTag;
+        if(str_contains($videoUrl, "/embed/")) {
+            $this->embedUrl = $videoUrl;
+            return $this;
+        }
+
+        $ytUrlStart = "https://www.youtube.com/watch?v=";
+        $dlUrlStart = "https://www.dailymotion.com/video/";
+
+        if(str_contains($videoUrl, $ytUrlStart))
+        {
+            $vidId = trim($videoUrl, $ytUrlStart);
+            $this->embedUrl = ("https://www.youtube.com/embed/" . $vidId);
+        }
+        elseif (str_contains($videoUrl, $dlUrlStart))
+        {
+            $vidId = trim($videoUrl, $dlUrlStart);
+            $this->embedUrl = ("https://www.dailymotion.com/embed/video/" . $vidId);
+        }
 
         return $this;
     }

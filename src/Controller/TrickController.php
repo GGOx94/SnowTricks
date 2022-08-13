@@ -2,13 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
+use App\Form\TrickFormType;
+use App\Service\FileManager;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,23 +17,23 @@ use App\Entity\Trick;
 
 class TrickController extends AbstractController
 {
-    //TODO route edit here too, check trick->getId() for modif date / twig var edit=true
+    private FileManager $fileManager;
+    private EntityManagerInterface $manager;
+    private EntityRepository $repo;
+
+    public function __construct(FileManager $fileManager, EntityManagerInterface $entityManager)
+    {
+        $this->fileManager = $fileManager;
+        $this->manager = $entityManager;
+        $this->repo = $entityManager->getRepository(Trick::class);
+    }
+
     #[Route('/trick/new', name: 'app_trick_new')]
-    public function create(Request $request, EntityManagerInterface $manager): Response
+    public function create(Request $request): Response
     {
         $trick = new Trick();
 
-        $form = $this->createFormBuilder($trick)
-            ->add('title', TextType::class, ['label' => 'Nom'])
-            ->add('description', TextType::class, ['label' => 'Description'])
-            ->add('category', EntityType::class, [
-                'class' => Category::class,
-                'choice_label' => 'label',
-            ])
-            //TODO uploads image(s) / link embed video(s) (TWIG side perhaps ?)
-            ->add('save', SubmitType::class, ['label' => 'Ajouter le trick'])
-            ->getForm();
-
+        $form = $this->createForm(TrickFormType::class, $trick);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
@@ -43,37 +42,85 @@ class TrickController extends AbstractController
             $slug = (new AsciiSlugger())->slug($trick->getTitle());
             $trick->setSlug($slug);
 
-            // TODO : create subdir for pictures in public/uploads/pictures/[SLUG]
+            $this->handleFormPictures($form->get('pictures')->getData(), $slug);
 
-            $manager->persist($trick);
-            $manager->flush();
+            $this->manager->persist($trick);
+            $this->manager->flush();
 
             return $this->redirectToRoute('app_trick', [ 'slug' => $slug ]);
         }
 
         return $this->render('trick/create_trick.html.twig', [
-            'controller_name' => 'TrickController',
             'formTrick' => $form->createView()
         ]);
     }
 
-    #[Route('/trick/{slug}', name: 'app_trick')]
-    public function index(string $slug, ManagerRegistry $doctrine): Response
+    #[Route('/trick/{slug}/edit', name: 'app_trick_edit')]
+    public function edit(string $slug, Request $request): Response
     {
-        $trickRepo = $doctrine->getRepository(Trick::class);
-        $trick = $trickRepo->findOneBy(['slug' => $slug]);
+        $trick = $this->repo->findOneBy(['slug' => $slug]);
+        //TODO check trick found
 
-        //TODO HANDLE TRICK NULL HERE (404 ?)
+        $form = $this->createForm(TrickFormType::class, $trick);
+        //TODO do not remove pictures & videos, use those fields to add, buttons on existing pics & vids to update/delete
+        $form->remove('pictures'); // Remove the picture file picker field from the form when editing tricks
+        $form->handleRequest($request);
 
-        $mainPicture = "/uploads/pictures/";
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $slug = (new AsciiSlugger())->slug($trick->getTitle());
+            $trick->setSlug($slug);
+
+            //TODO namechange picture dir ? use id instead of slug for dir ? don't use subdirs ?
+
+            $this->manager->persist($trick);
+            $this->manager->flush();
+
+            return $this->redirectToRoute('app_trick', [ 'slug' => $slug ]);
+        }
+
+        $picturesUri = $this->getParameter('tricks_pics_uri');
+
         $pictures = $trick->getPictures();
-        $mainPicture .= $pictures->isEmpty() ? "default.png" : $slug . "/" . $pictures[0]->getFileName();
 
-        return $this->render('trick/index.html.twig', [
-            'controller_name' => 'TrickController',
+        return $this->render('trick/edit.html.twig', [
             'trick' => $trick,
-            'mainPicture' => $mainPicture,
-            'avatarDirectory' => $this->getParameter('avatars_uri')
+            'picturesUri' => $picturesUri,
+            'trickForm' => $form->createView()
         ]);
+    }
+
+//    #[Route('/trick/{slug}/addVideo', name: 'app_trick_add_video')]
+//    public function edit(string $slug, Request $request): Response
+//    {
+//
+//    }
+
+    #[Route('/trick/{slug}', name: 'app_trick')]
+    public function display(string $slug): Response
+    {
+        $trick = $this->repo->findOneBy(['slug' => $slug]);
+
+        //TODO check trick found
+
+        $avatarsUri = $this->getParameter('avatars_uri');
+        $picturesUri = $this->getParameter('tricks_pics_uri');
+
+        return $this->render('trick/display.html.twig', [
+            'trick' => $trick,
+            'picturesUri' => $picturesUri,
+            'avatarsUri' => $avatarsUri,
+        ]);
+    }
+
+    private function handleFormPictures(ArrayCollection $pictures, string $trickSlug) : void
+    {
+        if (!$pictures->isEmpty())
+        {
+            foreach ($pictures as $pic)
+            {
+                $pic->setFileName($this->fileManager->uploadTrickPicture($pic->getFile(), $trickSlug));
+            }
+        }
     }
 }

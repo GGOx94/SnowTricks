@@ -11,6 +11,7 @@
         }
         .hero {
             position: relative;
+            background-color: #3c9b5f;
         }
         .hero .title {
             position: absolute;
@@ -50,66 +51,96 @@
             width: 50px;
             height: 50px;
         }
+
+        .trick-media-carousel-container {
+            display: flex;
+            justify-items: center;
+            gap: 1em;
+            padding: 5px 0;
+        }
+
+        .btn-prev, .btn-next {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            color: #0d92bd;
+            font-size: 2rem;
+        }
+
+        .trick-media-carousel {
+            display: flex;
+            justify-items: center;
+            overflow-x: scroll;
+            scroll-behavior: smooth;
+        }
+
+        .trick-media-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .media  {
+            flex-basis: 16.67%; /* Allow for 6 medias displayed on carousel */
+            flex-shrink: 0;
+            padding: 0.5rem;
+        }
+        .media .picture, .media .video {
+            width: 100%;
+            height: 120px;
+        }
     </style>
 
 <div class="trick-container container">
 
+    {% set mainPic = trick.pictures is empty ?
+        picturesUri ~ "default.png" :
+        picturesUri ~ trick.slug ~ "/" ~ trick.pictures|first.fileName
+    %}
     <div class="hero text-center"> {# TODO : darken picture & white text ? #}
         <h1 class="title display-1 fw-bold text-center w-100">{{ trick.title|raw }}</h1>
-        <img src="{{ mainPicture }}" class="picture" alt="Présentation du trick {{ trick.title|raw }}">
+        <img src="{{ mainPic }}" class="picture" alt="Présentation du trick {{ trick.title|raw }}">
     </div>
 
-    <div class="trick-media-container">
+    <div class="trick-media-carousel-container">
+        <button class="btn-prev">&lt;</button> {# TODO don't show carousel control buttons if no medias #}
 
-        {# TODO skip first pic (already displayed) #}
-        {% for pic in trick.pictures %}
-            <div class="picture">
-                [PIC]
-            </div>
-        {% endfor %}
+        <div class="trick-media-carousel">
+            {% for pic in trick.pictures[1:] %} {# Skip first picture (displayed as mainPic) #}
+                <div class="media">
+                    <img class="picture" src="{{ picturesUri ~ trick.slug ~ "/" ~ pic.fileName }}" alt="Image du trick {{ trick.title|raw }}">
+                </div>
+            {% endfor %}
 
-        {% for vid in trick.videos %}
-            <div class="video">
-                [VID]
-            </div>
-        {% endfor %}
-
-    </div>
-
-        <p>
-            {{ trick.description|raw }}
-        </p>
-
-    <div>
-        <small>Groupe : {{ trick.category.label }} - </small>
-        <small>Trick créé le : {{ trick.createdAt|date("m/d/Y") }}</small>
-            {% if trick.modifiedAt %}
-                <small>Trick créé le : {{ trick.modifiedAt|date("m/d/Y") }}</small>
-            {% endif %}
-    </div>
-
-    <hr>
-    <h3>[TODO : Formulaire commentaire si connecté]</h3>
-    <hr>
-    <h2> Commentaires !</h2>
-    <hr>
-
-    <div class="comments mx-auto col-8">
-    {%  for com in trick.comments %}
-
-        <div class="comment">
-            <div class="author col-2">
-                <img src="{{ avatarDirectory }}{{ com.author.avatar }}">
-                <p>{{ com.author.name }}</p>
-            </div>
-            <div class="content col-10 px-0 mx-0">
-                <p>{{ com.content }}</p>
-                <small>Publié le : {{ com.createdAt|date("m/d/Y") }}</small>
-            </div>
+            {% for vid in trick.videos %}
+                <div class="media">
+                    <iframe class="video" src="{{ vid.embedUrl }}" allowfullscreen></iframe>
+                </div>
+            {% endfor %}
         </div>
 
-    {% endfor %}
+        <button class="btn-next">&gt;</button>
     </div>
+
+    {# TODO MOVE THAT IN A CAROUSEL.JS SCRIPT #}
+    <script>
+
+        let mediaCrsl = document.querySelector('.trick-media-carousel');
+        let prv = document.querySelector('.btn-prev');
+        let nxt = document.querySelector('.btn-next');
+        let media = document.querySelector('.media');
+
+        nxt.addEventListener('click', function() { mediaCrsl.scrollLeft += media.clientWidth; });
+        prv.addEventListener('click', function() { mediaCrsl.scrollLeft -= media.clientWidth; });
+
+    </script>
+
+    {# TODO see wireframes to place those buttons #}
+    {# TODO hide in edit mode #}
+    <div>
+        <a class='btn btn-info' href="{{ path('app_trick_edit', { 'slug': trick.slug }) }}">Modifier</a>
+        <a class='btn btn-danger' href="#">Supprimer</a>
+    </div>
+
+    {% block trickBody %}{% endblock %}
 
 </div>
 

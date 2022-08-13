@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PictureRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity(repositoryClass: PictureRepository::class)]
 class Picture
@@ -11,14 +12,28 @@ class Picture
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'pictures')]
     #[ORM\JoinColumn(nullable: false)]
-    private $trick;
+    private Trick $trick;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $fileName;
+    private string $fileName;
+
+    // Unmapped by Doctrine, used to multi-upload images by a collection of forms in trick creation / update
+    private UploadedFile $file;
+    public function getFile() : UploadedFile
+    {
+        return $this->file;
+    }
+
+    public function setFile($file): self
+    {
+        $this->file = $file;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
