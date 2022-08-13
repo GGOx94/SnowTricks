@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ trick.title }}{% endblock %}
+
+{% block body %}
+
+    {# TODO MOVE TMP STYLE HERE TO CSS #}
+    <style>
+        .trick-container {
+            padding-top: 5vh;
+        }
+        .hero {
+            position: relative;
+        }
+        .hero .title {
+            position: absolute;
+            top:45%;
+        }
+        .hero .picture {
+            width:100%;
+            max-height: 600px;
+        }
+
+        .comments {
+            display: flex;
+            flex-direction: column;
+            gap:1em;
+        }
+        .comment {
+            display: flex;
+            align-items: flex-start;
+        }
+        .comment .author {
+        }
+        .comment .content {
+            position:relative;
+            margin: 0;
+            padding: 0;
+            border: black solid thin;
+            min-height:80px;
+        }
+        .comment small {
+            position:absolute;
+            right:0;
+            bottom: 0;
+            color: #a4a4a4;
+        }
+
+        .comment img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+
+<div class="trick-container container">
+
+    <div class="hero text-center"> {# TODO : darken picture & white text ? #}
+        <h1 class="title display-1 fw-bold text-center w-100">{{ trick.title|raw }}</h1>
+        <img src="{{ mainPicture }}" class="picture" alt="Présentation du trick {{ trick.title|raw }}">
+    </div>
+
+    <div class="trick-media-container">
+
+        {# TODO skip first pic (already displayed) #}
+        {% for pic in trick.pictures %}
+            <div class="picture">
+                [PIC]
+            </div>
+        {% endfor %}
+
+        {% for vid in trick.videos %}
+            <div class="video">
+                [VID]
+            </div>
+        {% endfor %}
+
+    </div>
+
+    {# TODO see wireframes to place those buttons #}
+    <div>
+        <a href="{{ path('app_trick_edit', { 'slug': trick.slug }) }}">Modifier</a>
+    </div>
+
+        <p>
+            {{ trick.description|raw }}
+        </p>
+
+    <div>
+        <small>Groupe : {{ trick.category.label }} - </small>
+        <small>Trick créé le : {{ trick.createdAt|date("m/d/Y") }}</small>
+            {% if trick.modifiedAt %}
+                <small>Trick créé le : {{ trick.modifiedAt|date("m/d/Y") }}</small>
+            {% endif %}
+    </div>
+
+    <hr>
+    <h3>[TODO : Formulaire commentaire si connecté]</h3>
+    <hr>
+    <h2> Commentaires !</h2>
+    <hr>
+
+    <div class="comments mx-auto col-8">
+    {%  for com in trick.comments %}
+
+        <div class="comment">
+            <div class="author col-2">
+                <img src="{{ avatarDirectory }}{{ com.author.avatar }}">
+                <p>{{ com.author.name }}</p>
+            </div>
+            <div class="content col-10 px-0 mx-0">
+                <p>{{ com.content }}</p>
+                <small>Publié le : {{ com.createdAt|date("m/d/Y") }}</small>
+            </div>
+        </div>
+
+    {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}
