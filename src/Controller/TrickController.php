@@ -31,7 +31,7 @@ class TrickController extends AbstractController
                 'class' => Category::class,
                 'choice_label' => 'label',
             ])
-            //TODO upload image(s) / link embed video(s) (TWIG side perhaps ?)
+            //TODO uploads image(s) / link embed video(s) (TWIG side perhaps ?)
             ->add('save', SubmitType::class, ['label' => 'Ajouter le trick'])
             ->getForm();
 
@@ -43,7 +43,7 @@ class TrickController extends AbstractController
             $slug = (new AsciiSlugger())->slug($trick->getTitle());
             $trick->setSlug($slug);
 
-            // TODO : create subdir for pictures in public/upload/pictures/tricks/[SLUG]
+            // TODO : create subdir for pictures in public/uploads/pictures/[SLUG]
 
             $manager->persist($trick);
             $manager->flush();
@@ -65,18 +65,15 @@ class TrickController extends AbstractController
 
         //TODO HANDLE TRICK NULL HERE (404 ?)
 
-        $mainPicture = "/upload/pictures/tricks/";
+        $mainPicture = "/uploads/pictures/";
         $pictures = $trick->getPictures();
-        if($pictures->isEmpty()) {
-            $mainPicture .= "default.png";
-        } else {
-            $mainPicture .= $pictures[0]->getFileName();
-        }
+        $mainPicture .= $pictures->isEmpty() ? "default.png" : $slug . "/" . $pictures[0]->getFileName();
 
         return $this->render('trick/index.html.twig', [
             'controller_name' => 'TrickController',
             'trick' => $trick,
-            'mainPicture' => $mainPicture
+            'mainPicture' => $mainPicture,
+            'avatarDirectory' => $this->getParameter('avatars_uri')
         ]);
     }
 }

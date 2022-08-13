@@ -4,6 +4,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    avatars_uri: '/uploads/avatars/'
+    tricks_pics_uri: '/uploads/pictures/'
+    avatars_dir: '%kernel.project_dir%/public/%avatars_uri%'
+    tricsk_pics_dir: '%kernel.project_dir%/public/%tricks_pics_uri%'
 
 services:
     # default configuration for services in *this* file
@@ -19,6 +23,11 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\Service\FileManager:
+        arguments:
+            $avatarsDir: '%avatars_dir%'
+            $tricksDir: '%tricsk_pics_dir%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

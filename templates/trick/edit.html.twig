@@ -76,6 +76,11 @@
 
     </div>
 
+    {# TODO see wireframes to place those buttons #}
+    <div>
+        <a href="{{ path('app_trick_edit', { 'slug': trick.slug }) }}">Modifier</a>
+    </div>
+
         <p>
             {{ trick.description|raw }}
         </p>

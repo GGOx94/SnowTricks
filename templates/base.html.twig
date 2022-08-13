@@ -36,12 +36,16 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_trick_new') }}">Création</a>
+                        <a class="nav-link" href="{{ path('app_trick_new') }}">Nouveau Trick</a>
                     </li>
+                    {% if userIsLogged %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_login') }}">{{ userIsLogged ? 'Connecté : ' ~ app.user.name : 'Connexion' }}</a>
+                        <a class="nav-link" href="{{ path('app_profile') }}">{{ 'Connecté : ' ~ app.user.name }}</a>
                     </li>
-                    {% if not userIsLogged %}
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Se connecter</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_register') }}">Créer un compte</a>
                     </li>
