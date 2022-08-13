@@ -1,0 +1,39 @@
+{% extends 'trick/index.html.twig' %}
+{% block trickBody %}
+
+    <p>
+        {{ trick.description|raw }}
+    </p>
+
+    <div>
+        <small>Groupe : {{ trick.category.label }} - </small>
+        <small>Trick créé le : {{ trick.createdAt|date("m/d/Y") }}</small>
+        {% if trick.modifiedAt %}
+            <small>Trick créé le : {{ trick.modifiedAt|date("m/d/Y") }}</small>
+        {% endif %}
+    </div>
+
+    <hr>
+    <h3>[TODO : Formulaire commentaire si connecté]</h3>
+    <hr>
+    <h2> Commentaires !</h2>
+    <hr>
+
+    <div class="comments mx-auto col-8">
+        {%  for com in trick.comments %}
+
+            <div class="comment">
+                <div class="author col-2">
+                    <img src="{{ avatarsUri }}{{ com.author.avatar }}">
+                    <p>{{ com.author.name }}</p>
+                </div>
+                <div class="content col-10 px-0 mx-0">
+                    <p>{{ com.content }}</p>
+                    <small>Publié le : {{ com.createdAt|date("m/d/Y") }}</small>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+{% endblock %}

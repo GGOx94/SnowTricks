@@ -25,8 +25,10 @@ class FileManager
 
     public function uploadTrickPicture(UploadedFile $file, string $trickSlug) : string
     {
-        //TODO create subdir with trickSlug if not exists
         $targetDir = $this->tricksDir . $trickSlug;
+
+        if( !$this->filesystem->exists($targetDir) )
+            $this->filesystem->mkdir($targetDir);
 
         return $this->upload($file, $targetDir);
     }

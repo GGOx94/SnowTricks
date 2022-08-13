@@ -33,10 +33,10 @@ class Trick
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Picture::class)]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Picture::class, cascade: ['persist'])]
     private Collection $pictures;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class)]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class, cascade: ['persist'])]
     private Collection $videos;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'tricks')]

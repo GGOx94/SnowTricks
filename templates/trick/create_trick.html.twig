@@ -6,6 +6,59 @@
 
 <h1 class="text-center" style="margin: 80px;">Ajouter un trick</h1>
 
-{{  form(formTrick) }}
+{{  form_start(formTrick) }}
+    <h3>Images</h3>
+    <ul class="pictures"
+        data-index="{{ formTrick.pictures|length > 0 ? formTrick.pictures|last.vars.name + 1 : 0 }}"
+        data-prototype="{{ form_widget(formTrick.pictures.vars.prototype)|e('html_attr') }}">
+
+        {% for pic in formTrick.pictures %}
+            <li>{{ form_row(pic.file) }}</li>
+        {% endfor %}
+
+    </ul>
+    <button type="button" class="add_item_link" data-collection-holder-class="pictures">Ajouter une image</button>
+
+    <h3>Vidéos</h3>
+    <ul class="videos"
+        data-index="{{ formTrick.videos|length > 0 ? formTrick.videos|last.vars.name + 1 : 0 }}"
+        data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e('html_attr') }}">
+
+        {% for vid in formTrick.videos %}
+            <li>{{ form_row(vid.embedUrl) }}</li>
+        {% endfor %}
+
+    </ul>
+    <button type="button" class="add_item_link" data-collection-holder-class="videos">Ajouter une vidéo</button>
+
+{{  form_end(formTrick) }}
+
+
+
+<script>
+    const addFormToCollection = (e) => {
+        const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+        const item = document.createElement('li');
+
+        item.innerHTML = collectionHolder
+            .dataset
+            .prototype
+            .replace(
+                /__name__/g,
+                collectionHolder.dataset.index
+            );
+
+        collectionHolder.appendChild(item);
+
+        collectionHolder.dataset.index++;
+    };
+
+    document
+        .querySelectorAll('.add_item_link')
+        .forEach(btn => {
+            btn.addEventListener("click", addFormToCollection)
+        });
+</script>
 
 {% endblock %}
