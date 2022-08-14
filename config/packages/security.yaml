@@ -39,7 +39,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/admin, roles: ROLE_ADMIN }
-         - { path: ^/profile, roles: ROLE_USER } # TODO profile page instead of login page when logged
+         - { path: ^/user, roles: ROLE_ADMIN }
+         - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
     security:

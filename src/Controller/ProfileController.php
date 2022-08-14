@@ -55,8 +55,11 @@ class ProfileController extends AbstractController
             // Upload the new avatar
             $avatarFileName = $this->fileManager->uploadAvatar($avatarFile);
 
-            // Remove the old avatar
-            $this->fileManager->removeAvatar($user->getAvatar());
+            // Remove the old avatar if not default
+            $oldAvatar = $user->getAvatar();
+            if($oldAvatar !== "default.png") {
+                $this->fileManager->removeAvatar($user->getAvatar());
+            }
 
             $this->manager->persist($user->setAvatar($avatarFileName));
             $this->manager->flush();

@@ -21,11 +21,4 @@ class HomeController extends AbstractController
             'tricks' => $tricks
         ]);
     }
-
-    //TODO TMP make admincontroller
-    #[Route('/admin', name: 'app_admin')]
-    public function admin(): Response
-    {
-        return $this->render('admin/index.html.twig');
-    }
 }

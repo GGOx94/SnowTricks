@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -46,8 +47,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->comments = new ArrayCollection();
     }
 
-    // TODO update entity & put tokens (signup / passwd change) here ?
-
     public function getId(): ?int
     {
         return $this->id;
@@ -77,9 +76,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAvatar(): ?string
+    public function getAvatar(): string
     {
-        //TODO make sure we cant overwrite the default avatar ([user.name]-avatar.png when uploading ?)
         return $this->avatar ?? 'default.png';
     }
 
@@ -117,6 +115,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = array_unique($this->roles);
     }
 
+    public function setRole(string $role)
+    {
+        $this->roles = array($role);
+    }
+
+    public function getComments() : Collection
+    {
+        return $this->comments;
+    }
+
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
@@ -142,6 +150,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function isBanned(): bool
     {
-        return isset($this->roles['ROLE_BANNED']);
+        return in_array('ROLE_BANNED', $this->roles);
     }
 }

@@ -99,6 +99,8 @@ class RegistrationController extends AbstractController
         }
 
         $user->setIsVerified(true);
+        $user->addRole("ROLE_USER");
+        $manager->persist($user);
         $manager->flush($user);
         $this->addFlash('success', 'Votre adresse email a été validée !');
         return $this->redirectToRoute('app_home');
