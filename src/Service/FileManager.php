@@ -2,11 +2,11 @@
 
 namespace App\Service;
 
+use Exception;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use function PHPUnit\Framework\throwException;
 
 class FileManager
 {
@@ -43,6 +43,9 @@ class FileManager
         $this->filesystem->remove($this->avatarsDir . $fileName);
     }
 
+    /**
+     * @throws Exception
+     */
     private function upload(UploadedFile $file, string $targetDir) : string
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -52,7 +55,7 @@ class FileManager
         try {
             $file->move($targetDir, $fileName);
         } catch (FileException $e) {
-            throwException($e);
+            throw new Exception("Exception levée pendant le déplacement du fichier dans son dossier : " . $e);
         }
 
         return $fileName;

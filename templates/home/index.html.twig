@@ -45,7 +45,7 @@
             <p>
                 {{ trick.description|raw }}
             </p>
-            <small>Trick créé le : {{ trick.createdAt|date("m/d/Y") }}</small>
+            <small>Trick créé le : {{ trick.createdAt|date("d/m/Y") }}</small>
             <a href="{{ path('app_trick', {'slug': trick.slug}) }}">Voir le trick</a>
         </div>
 

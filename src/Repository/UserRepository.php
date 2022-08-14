@@ -39,20 +39,39 @@ class UserRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return User[] Returns an array of User objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
+    /**
+     * @return User[] Returns an array of User objects
+     */
+    public function findByRole($role) : array
+    {
+        $roleQStr = '%"'.$role.'"%';
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('role', $roleQStr)
 //            ->orderBy('u.id', 'ASC')
 //            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findByRoles($roles) : array
+    {
+        $condition = 'u.roles LIKE :roles0';
+        foreach ($roles as $key => $role){
+            if ($key !== 0){
+                $condition .= " OR u.roles LIKE :roles".$key;
+            }
+        }
+
+        $query = $this->createQueryBuilder('u')
+            ->where($condition);
+        foreach ($roles as $key => $role){
+            $query ->setParameter('roles'.$key, '%"'.$role.'"%');
+        }
+
+        return $query->getQuery()->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?User
 //    {

@@ -7,9 +7,9 @@
 
     <div>
         <small>Groupe : {{ trick.category.label }} - </small>
-        <small>Trick créé le : {{ trick.createdAt|date("m/d/Y") }}</small>
+        <small>Trick créé le : {{ trick.createdAt|date("d/m/Y") }}</small>
         {% if trick.modifiedAt %}
-            <small>Trick créé le : {{ trick.modifiedAt|date("m/d/Y") }}</small>
+            <small>Trick créé le : {{ trick.modifiedAt|date("d/m/Y") }}</small>
         {% endif %}
     </div>
 
@@ -29,7 +29,7 @@
                 </div>
                 <div class="content col-10 px-0 mx-0">
                     <p>{{ com.content }}</p>
-                    <small>Publié le : {{ com.createdAt|date("m/d/Y") }}</small>
+                    <small>Publié le : {{ com.createdAt|date("d/m/Y") }}</small>
                 </div>
             </div>
 
