@@ -15,31 +15,41 @@
 
     {# If user is logged-in #}
     {% if app.user.name is defined %}
+
+        <div> {# TODO see wireframes to place edit / delete buttons #}
+            <a class='btn btn-info' href="{{ path('app_trick_edit', { 'slug': trick.slug }) }}">Modifier</a>
+            <a class='btn btn-danger' href="{{ path('app_trick_delete', { 'slug': trick.slug }) }}">Supprimer</a>
+        </div>
+
         <hr>
         <h3>Poster un commentaire</h3>
         {{ form(commentForm) }}
         <hr>
+
     {% endif %}
 
 
-    <h2> Commentaires postés</h2>
-    <hr>
+    {% if trick.comments|length > 0 %}
 
-    <div class="comments mx-auto col-8">
-        {%  for com in trick.comments %}
+        <h2> Commentaires postés</h2>
+        <hr>
 
-            <div class="comment">
-                <div class="author col-2">
-                    <img src="{{ avatarsUri }}{{ com.author.avatar }}">
-                    <p>{{ com.author.name }}</p>
+        <div class="comments mx-auto col-8">
+            {%  for com in trick.comments %}
+
+                <div class="comment">
+                    <div class="author col-2">
+                        <img src="{{ avatarsUri }}{{ com.author.avatar }}" alt="Avatar de l'utilisateur {{ com.author.name }}">
+                        <p>{{ com.author.name }}</p>
+                    </div>
+                    <div class="content col-10 px-0 mx-0">
+                        <p>{{ com.content }}</p>
+                        <small>Publié le : {{ com.createdAt|date("d/m/Y") }}</small>
+                    </div>
                 </div>
-                <div class="content col-10 px-0 mx-0">
-                    <p>{{ com.content }}</p>
-                    <small>Publié le : {{ com.createdAt|date("d/m/Y") }}</small>
-                </div>
-            </div>
 
-        {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
 {% endblock %}
