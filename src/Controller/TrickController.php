@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
+use App\Form\CommentFormType;
 use App\Form\TrickFormType;
 use App\Service\FileManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -81,8 +83,6 @@ class TrickController extends AbstractController
 
         $picturesUri = $this->getParameter('tricks_pics_uri');
 
-        $pictures = $trick->getPictures();
-
         return $this->render('trick/edit.html.twig', [
             'trick' => $trick,
             'picturesUri' => $picturesUri,
@@ -97,11 +97,25 @@ class TrickController extends AbstractController
 //    }
 
     #[Route('/trick/{slug}', name: 'app_trick')]
-    public function display(string $slug): Response
+    public function display(string $slug, Request $request): Response
     {
-        $trick = $this->repo->findOneBy(['slug' => $slug]);
+        $trick = $this->repo->findOneBy(['slug' => $slug]);         //TODO check trick found
+        $comment = new Comment();
 
-        //TODO check trick found
+        $form = $this->createForm(CommentFormType::class, $comment);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $comment->setTrick($trick);
+            $comment->setAuthor($this->getUser());
+            $comment->setCreatedAt(new \DateTimeImmutable());
+
+            $this->manager->persist($comment);
+            $this->manager->flush();
+
+            return $this->redirectToRoute('app_trick', [ 'slug' => $slug ]);
+        }
 
         $avatarsUri = $this->getParameter('avatars_uri');
         $picturesUri = $this->getParameter('tricks_pics_uri');
@@ -110,16 +124,17 @@ class TrickController extends AbstractController
             'trick' => $trick,
             'picturesUri' => $picturesUri,
             'avatarsUri' => $avatarsUri,
+            'commentForm' => $form->createView()
         ]);
     }
 
     private function handleFormPictures(ArrayCollection $pictures, string $trickSlug) : void
     {
-        if (!$pictures->isEmpty())
-        {
-            foreach ($pictures as $pic)
-            {
-                $pic->setFileName($this->fileManager->uploadTrickPicture($pic->getFile(), $trickSlug));
+        if (!$pictures->isEmpty()) {
+            foreach ($pictures as $pic) {
+                $file = $pic->getFile();
+                $fileName = $this->fileManager->uploadTrickPicture($file, $trickSlug);
+                $pic->setFileName($fileName);
             }
         }
     }

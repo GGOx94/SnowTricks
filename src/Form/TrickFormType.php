@@ -4,11 +4,9 @@ namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Trick;
-use App\Entity\Video;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -38,14 +36,14 @@ class TrickFormType extends AbstractType
 //            ])
 
             ->add('pictures', CollectionType::class, [
-                'entry_type' => PictureType::class,
+                'entry_type' => PictureFormType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,
                 'by_reference' => false
             ])
 
             ->add('videos', CollectionType::class, [
-                'entry_type' => VideoType::class,
+                'entry_type' => VideoFormType::class,
                 'entry_options' => ['label' => false ],
                 'allow_add' => true,
                 'by_reference' => false

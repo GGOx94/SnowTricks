@@ -13,10 +13,16 @@
         {% endif %}
     </div>
 
-    <hr>
-    <h3>[TODO : Formulaire commentaire si connecté]</h3>
-    <hr>
-    <h2> Commentaires !</h2>
+    {# If user is logged-in #}
+    {% if app.user.name is defined %}
+        <hr>
+        <h3>Poster un commentaire</h3>
+        {{ form(commentForm) }}
+        <hr>
+    {% endif %}
+
+
+    <h2> Commentaires postés</h2>
     <hr>
 
     <div class="comments mx-auto col-8">
