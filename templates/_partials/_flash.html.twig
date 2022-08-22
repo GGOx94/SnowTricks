@@ -1,10 +1,45 @@
+<script>
+   function initToast() {
+        toastr.options = {
+            'closeButton': true,
+            'debug': false,
+            'newestOnTop': false,
+            'progressBar': false,
+            'positionClass': 'toast-top-center',
+            'preventDuplicates': false,
+            'showDuration': '1000',
+            'hideDuration': '1000',
+            'timeOut': '5000',
+            'extendedTimeOut': '1000',
+            'showEasing': 'swing',
+            'hideEasing': 'linear',
+            'showMethod': 'fadeIn',
+            'hideMethod': 'fadeOut',
+        };
+    }
+</script>
+
+<style>
+    .toast {
+        margin-top: 5rem !important;
+    }
+</style>
+
 {% for label, messages in app.flashes %}
     {% for message in messages %}
-        <div class="alert alert-{{ label }} alert-dismissible" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            <div class="alert-message">
-                {{ message|raw }}
-            </div>
-        </div>
+        {% if loop.first %}
+            <script> initToast(); </script>
+        {% endif %}
+
+        <script> toastr.{{ label }}("{{ message }}"); </script>
     {% endfor %}
 {% endfor %}
+        {# Standard Bootstrap flash messages below #}
+{#        <div class="alert alert-{{ label }} alert-dismissible" role="alert">#}
+{#            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>#}
+{#            <div class="alert-message">#}
+{#                {{ message|raw }}#}
+{#            </div>#}
+{#        </div>#}
+
+
