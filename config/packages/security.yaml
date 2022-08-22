@@ -25,9 +25,10 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
+                default_target_path: app_login_message
             logout:
                 path: app_logout
-                target: app_home
+                target: app_logout_message
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

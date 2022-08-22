@@ -100,6 +100,8 @@ class TrickController extends AbstractController
         $this->manager->flush();
         $this->fileManager->removeTrickPicsDir($slug);
 
+        $this->addFlash('success', 'Le trick "'.$trick->getTitle().'" a bien été supprimé');
+
         return $this->redirectToRoute('app_home');
     }
 

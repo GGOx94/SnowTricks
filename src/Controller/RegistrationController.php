@@ -65,6 +65,7 @@ class RegistrationController extends AbstractController
                 ->context(compact('user', 'token', 'expireHours'));
 
             $this->mailer->send($email);
+            $this->addFlash('info', "Un email de confirmation a été envoyé sur l'adresse : ". $user->getEmail());
 
             return $this->redirectToRoute('app_home');
         }
@@ -79,13 +80,13 @@ class RegistrationController extends AbstractController
     {
         // Invalid token (regex mismatch or forged token with wrong secret key)
         if(!$this->tokenSvc->isRegexValid($token) || !$this->tokenSvc->check($token, $_ENV['JWTOKEN_SECRET'])) {
-            $this->addFlash('danger', 'Le token de vérification est invalide');
+            $this->addFlash('error', 'Le token de vérification est invalide');
             return $this->redirectToRoute('app_home');
         }
 
         // Expired token
         if($this->tokenSvc->isExpired($token)) {
-            $this->addFlash('danger', 'Le token de vérification est expiré');
+            $this->addFlash('error', 'Le token de vérification est expiré');
             return $this->redirectToRoute('app_home');
         }
 
@@ -94,7 +95,7 @@ class RegistrationController extends AbstractController
 
         // Invalid or already verified user
         if(!$user || $user->isVerified()) {
-            $this->addFlash('danger', 'L\'utilisateur est déjà vérifié ou est invalide');
+            $this->addFlash('error', 'L\'utilisateur est déjà vérifié ou est invalide');
             return $this->redirectToRoute('app_login');
         }
 
@@ -102,7 +103,9 @@ class RegistrationController extends AbstractController
         $user->addRole("ROLE_USER");
         $manager->persist($user);
         $manager->flush($user);
-        $this->addFlash('success', 'Votre adresse email a été validée !');
+
+        $this->addFlash('success', 'Votre adresse email a bien été validée !');
+
         return $this->redirectToRoute('app_home');
     }
 }
