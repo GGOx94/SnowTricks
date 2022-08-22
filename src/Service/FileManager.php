@@ -38,9 +38,22 @@ class FileManager
         return $this->upload($file, $this->avatarsDir);
     }
 
+    public function removeTrickPicsDir(string $trickSlug) : void
+    {
+        $targetDir = $this->tricksDir . $trickSlug;
+
+        if( $this->filesystem->exists($targetDir) ) {
+            $this->filesystem->remove($targetDir);
+        }
+    }
+
     public function removeAvatar(string $fileName) : void
     {
-        $this->filesystem->remove($this->avatarsDir . $fileName);
+        $targetFile = $this->avatarsDir . $fileName;
+
+        if( $this->filesystem->exists($targetFile) ) {
+            $this->filesystem->remove($targetFile);
+        }
     }
 
     /**

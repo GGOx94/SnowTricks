@@ -60,20 +60,21 @@ class TrickController extends AbstractController
     #[Route('/trick/{slug}/edit', name: 'app_trick_edit')]
     public function edit(string $slug, Request $request): Response
     {
-        $trick = $this->repo->findOneBy(['slug' => $slug]);
-        //TODO check trick found
+        $trick = $this->repo->findOneOr404(['slug' => $slug]);
 
         $form = $this->createForm(TrickFormType::class, $trick);
-        //TODO do not remove pictures & videos, use those fields to add, buttons on existing pics & vids to update/delete
-        $form->remove('pictures'); // Remove the picture file picker field from the form when editing tricks
+
+        // Remove the pictures & videos form field
+        // When editing a trick, each element can be updated/deleted separately
+        $form->remove('pictures');
+        $form->remove('videos');
+
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
         {
             $slug = (new AsciiSlugger())->slug($trick->getTitle());
             $trick->setSlug($slug);
-
-            //TODO namechange picture dir ? use id instead of slug for dir ? don't use subdirs ?
 
             $this->manager->persist($trick);
             $this->manager->flush();
@@ -88,6 +89,18 @@ class TrickController extends AbstractController
             'picturesUri' => $picturesUri,
             'trickForm' => $form->createView()
         ]);
+    }
+
+    #[Route('/trick/{slug}/delete', name: 'app_trick_delete')]
+    public function delete(string $slug) : Response
+    {
+        $trick = $this->repo->findOneOr404(['slug' => $slug]);
+
+        $this->manager->remove($trick);
+        $this->manager->flush();
+        $this->fileManager->removeTrickPicsDir($slug);
+
+        return $this->redirectToRoute('app_home');
     }
 
 //    #[Route('/trick/{slug}/addVideo', name: 'app_trick_add_video')]
