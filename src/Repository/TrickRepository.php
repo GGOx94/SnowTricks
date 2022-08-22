@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Trick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * @extends ServiceEntityRepository<Trick>
@@ -37,6 +38,18 @@ class TrickRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findOneOr404(array $properties) : Trick
+    {
+        $trick = $this->findOneBy($properties);
+
+        if(!$trick)
+        {
+            throw new HttpException(404, "Ce trick n'existe pas.");
+        }
+
+        return $trick;
     }
 
 //    /**
