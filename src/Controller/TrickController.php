@@ -99,7 +99,8 @@ class TrickController extends AbstractController
     #[Route('/trick/{slug}', name: 'app_trick')]
     public function display(string $slug, Request $request): Response
     {
-        $trick = $this->repo->findOneBy(['slug' => $slug]);         //TODO check trick found
+        $trick = $this->repo->findOneOr404(['slug' => $slug]);
+
         $comment = new Comment();
 
         $form = $this->createForm(CommentFormType::class, $comment);
