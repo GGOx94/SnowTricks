@@ -29,5 +29,13 @@ services:
             $avatarsDir: '%avatars_dir%'
             $tricksDir: '%tricsk_pics_dir%'
 
+    App\Controller\TrickController:
+        arguments:
+            $picturesUri: '%tricks_pics_uri%'
+
+    App\Controller\TrickJsonController:
+        arguments:
+            $picturesUri: '%tricks_pics_uri%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

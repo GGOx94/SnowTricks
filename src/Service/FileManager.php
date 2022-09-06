@@ -23,14 +23,39 @@ class FileManager
         $this->tricksDir = $tricksDir;
     }
 
+    public function renameTrickPicsDir(string $oldSlug, string $newSlug) : void
+    {
+        $oldDir = $this->tricksDir . $oldSlug;
+        $newDir = $this->tricksDir . $newSlug;
+
+        if($oldDir === $newDir) {
+            return;
+        }
+
+        if($this->filesystem->exists($oldDir)) {
+            $this->filesystem->rename($oldDir, $newDir );
+        }
+    }
+
     public function uploadTrickPicture(UploadedFile $file, string $trickSlug) : string
     {
         $targetDir = $this->tricksDir . $trickSlug;
 
-        if( !$this->filesystem->exists($targetDir) )
+        if( !$this->filesystem->exists($targetDir) ) {
             $this->filesystem->mkdir($targetDir);
+        }
 
         return $this->upload($file, $targetDir);
+    }
+
+    public function deleteTrickPicture(string $trickSlug, string $fileName) : void
+    {
+        $targetDir = $this->tricksDir . $trickSlug;
+
+        $targetPicture = $targetDir . "/". $fileName;
+        if($this->filesystem->exists($targetPicture)) {
+            $this->filesystem->remove($targetPicture);
+        }
     }
 
     public function uploadAvatar(UploadedFile $file) : string

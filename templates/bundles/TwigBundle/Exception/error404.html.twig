@@ -2,7 +2,7 @@
 
 {% block body %}
     <h1>Page introuvable</h1>
-
+    {{ _context.exception.message }}
     <p>
         La page demandée n'existe pas ou a été supprimée.<br/>
         Vérifiez l'URL ou <a href="{{ path('app_home') }}">retournez à l'accueil</a>.

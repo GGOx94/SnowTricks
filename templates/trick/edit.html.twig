@@ -1,15 +1,28 @@
-{% extends 'trick/index.html.twig' %}
+{% extends 'trick/main.html.twig' %}
 {% block trickBody %}
+
+    <div class="popup-form-container form-video" data-app-url="#">
+        {{ form(formEditVideo) }}
+        <input type="button" value="Upload" onclick="postForm()" />
+    </div>
+
+    <div class="popup-form-container form-picture" data-app-url="#">
+        {{ form(formEditPicture) }}
+        <input type="button" value="Upload" onclick="postForm()" />
+    </div>
+
+    <a class="btn btn-info" onclick="openForm('{{ path('app_trick_add_video', { 'slug' : trick.slug }) }}', 'form-video')">
+        Ajouter une Vidéo
+    </a>
+
+    <a class="btn btn-info" onclick="openForm('{{ path('app_trick_add_picture', { 'slug' : trick.slug }) }}', 'form-picture')">
+        Ajouter une Image
+    </a>
+
     <h3>----------- TRICK EDIT BLOCK ---------</h3>
 
-    {{ form_start(trickForm) }}
+    {{  form_start(formEditTrick) }}
 
-        {{ form_row(trickForm.title) }}
-        {{ form_row(trickForm.description) }}
-        {{ form_row(trickForm.category) }}
-
-{#        {{ form_widget(form.fieldName, { 'attr': {'class': 'hidden-row'} }) }}#}
-
-    {{ form_end(trickForm) }}
+    {{  form_end(formEditTrick) }}
 
 {% endblock %}
