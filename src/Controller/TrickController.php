@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Form\CommentFormType;
+use App\Form\PictureFormType;
 use App\Form\TrickFormType;
+use App\Form\VideoFormType;
 use App\Service\FileManager;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,15 +21,19 @@ use App\Entity\Trick;
 
 class TrickController extends AbstractController
 {
-    private FileManager $fileManager;
-    private EntityManagerInterface $manager;
-    private EntityRepository $repo;
+    protected FileManager $fileManager;
+    protected EntityManagerInterface $manager;
 
-    public function __construct(FileManager $fileManager, EntityManagerInterface $entityManager)
+    protected EntityRepository $repo;
+    protected string $picturesUri;
+
+    public function __construct(FileManager $fileManager, EntityManagerInterface $entityManager, string $picturesUri)
     {
         $this->fileManager = $fileManager;
         $this->manager = $entityManager;
+
         $this->repo = $entityManager->getRepository(Trick::class);
+        $this->picturesUri = $picturesUri;
     }
 
     #[Route('/trick/new', name: 'app_trick_new')]
@@ -62,32 +68,37 @@ class TrickController extends AbstractController
     {
         $trick = $this->repo->findOneOr404(['slug' => $slug]);
 
-        $form = $this->createForm(TrickFormType::class, $trick);
+        $editTrickForm = $this->createForm(TrickFormType::class, $trick, [ 'edit_mode' => true ]);
 
-        // Remove the pictures & videos form field
-        // When editing a trick, each element can be updated/deleted separately
-        $form->remove('pictures');
-        $form->remove('videos');
+        $editTrickForm->handleRequest($request);
 
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid())
+        if($editTrickForm->isSubmitted() && $editTrickForm->isValid())
         {
             $slug = (new AsciiSlugger())->slug($trick->getTitle());
+            $oldSlug = $trick->getSlug();
             $trick->setSlug($slug);
 
             $this->manager->persist($trick);
             $this->manager->flush();
 
+            // If we modified the title (changing its slug), we need to rename its pictures directory too
+            if(strcmp($oldSlug, $slug) !== 0) {
+                $this->fileManager->renameTrickPicsDir($oldSlug, $slug);
+            }
+
             return $this->redirectToRoute('app_trick', [ 'slug' => $slug ]);
         }
 
-        $picturesUri = $this->getParameter('tricks_pics_uri');
+        $editPicForm = $this->createForm(PictureFormType::class);
+        $editVidForm = $this->createForm(VideoFormType::class);
 
         return $this->render('trick/edit.html.twig', [
             'trick' => $trick,
-            'picturesUri' => $picturesUri,
-            'trickForm' => $form->createView()
+            'picturesUri' => $this->picturesUri,
+            'formEditTrick' => $editTrickForm->createView(),
+            'formEditPicture' => $editPicForm->createView(),
+            'formEditVideo' => $editVidForm->createView(),
+            'editMode'=>true
         ]);
     }
 
@@ -104,12 +115,6 @@ class TrickController extends AbstractController
 
         return $this->redirectToRoute('app_home');
     }
-
-//    #[Route('/trick/{slug}/addVideo', name: 'app_trick_add_video')]
-//    public function edit(string $slug, Request $request): Response
-//    {
-//
-//    }
 
     #[Route('/trick/{slug}', name: 'app_trick')]
     public function display(string $slug, Request $request): Response
@@ -144,14 +149,13 @@ class TrickController extends AbstractController
         ]);
     }
 
-    private function handleFormPictures(ArrayCollection $pictures, string $trickSlug) : void
+    private function handleFormPictures(mixed $pictures, string $trickSlug) : void
     {
-        if (!$pictures->isEmpty()) {
-            foreach ($pictures as $pic) {
-                $file = $pic->getFile();
-                $fileName = $this->fileManager->uploadTrickPicture($file, $trickSlug);
-                $pic->setFileName($fileName);
-            }
+        foreach ($pictures as $pic)
+        {
+            $file = $pic->getFile();
+            $fileName = $this->fileManager->uploadTrickPicture($file, $trickSlug);
+            $pic->setFileName($fileName);
         }
     }
 }

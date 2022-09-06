@@ -166,12 +166,7 @@ class Trick
 
     public function removePicture(Picture $picture): self
     {
-        if ($this->pictures->removeElement($picture)) {
-            // set the owning side to null (unless already changed)
-            if ($picture->getTrick() === $this) {
-                $picture->setTrick(null);
-            }
-        }
+        $this->pictures->removeElement($picture);
 
         return $this;
     }
@@ -196,12 +191,7 @@ class Trick
 
     public function removeVideo(Video $video): self
     {
-        if ($this->videos->removeElement($video)) {
-            // set the owning side to null (unless already changed)
-            if ($video->getTrick() === $this) {
-                $video->setTrick(null);
-            }
-        }
+        $this->videos->removeElement($video);
 
         return $this;
     }

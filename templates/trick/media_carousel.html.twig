@@ -1,0 +1,77 @@
+{% set showCarouselControls = ((trick.pictures|length - 1 + trick.videos|length) > 4) %}
+{% set editMode = (trick.slug ~ '/edit') in app.request.uri %}
+
+ {% set useDefaultPic = trick.pictures is empty %}
+
+<div class="hero text-center"> {# TODO : darken picture & white text ? #}
+    <h1 class="title display-1 fw-bold text-center w-100">{{ trick.title|raw }}</h1>
+
+    {% if editMode and not useDefaultPic %}
+
+        <div class="media-controls">
+            <a class="ajax-control" onclick="openForm(
+                    '{{ path('app_trick_edit_picture', {'slug' : trick.slug, 'id' : trick.pictures|first.id }) }}',
+                    'form-picture'
+                    )" >
+                <img src="/medias/icons/pencil.png" alt="Modifier l'image"/>
+            </a>
+            <a class="ajax-control"
+               onclick="deleteMedia('{{ path('app_trick_delete_picture', {'slug' : trick.slug, 'id' : trick.pictures|first.id }) }}')">
+                <img src="/medias/icons/trash.png" alt="Supprimer l'image"/>
+            </a>
+        </div>
+
+    {% endif %}
+
+    <img src="{{ useDefaultPic ? picturesUri ~ "default.png" : picturesUri ~ trick.slug ~ "/" ~ trick.pictures|first.fileName }}"
+         class="picture" alt="Présentation du trick {{ trick.title|raw }}">
+</div>
+
+<div class="carousel-container">
+    <button id="btn-prev" style="display: {{ showCarouselControls ? 'block' : 'none' }}">&lt;</button>
+
+    <div class="trick-media-carousel">
+        {% for pic in trick.pictures[1:] %} {# Skip first picture, displayed as hero above media carousel #}
+            <div class="media">
+                {% if editMode %}
+                    <div class="media-controls">
+                        <a class="ajax-control" onclick="openForm(
+                                '{{ path('app_trick_edit_picture', {'slug' : trick.slug, 'id' : pic.id }) }}',
+                                'form-picture'
+                            )" >
+                            <img src="/medias/icons/pencil.png" alt="Modifier l'image"/>
+                        </a>
+                        <a class="ajax-control"
+                           onclick="deleteMedia('{{ path('app_trick_delete_picture', {'slug' : trick.slug, 'id' : pic.id }) }}')">
+                            <img src="/medias/icons/trash.png" alt="Supprimer l'image"/>
+                        </a>
+                    </div>
+                {% endif %}
+                <img src="{{ picturesUri ~ trick.slug ~ "/" ~ pic.fileName }}" alt="Image du trick {{ trick.title|raw }}">
+            </div>
+        {% endfor %}
+
+        {% for vid in trick.videos %}
+            <div class="media">
+                {% if editMode %}
+                    <div class="media-controls">
+                        <a class="ajax-control" onclick="openForm(
+                               '{{ path('app_trick_edit_video', {'slug' : trick.slug, 'id' : vid.id }) }}',
+                                'form-video'
+                           )">
+                            <img src="/medias/icons/pencil.png" alt="Modifier la vidéo"/>
+                        </a>
+                        <a class="ajax-control"
+                           onclick="deleteMedia('{{ path('app_trick_delete_video', {'slug' : trick.slug, 'id' : vid.id }) }}')">>
+                            <img src="/medias/icons/trash.png" alt="Supprimer la vidéo"/>
+                        </a>
+                    </div>
+                {% endif %}
+{#                <iframe src="{{ vid.embedUrl }}?controls=0&autoplay=0" allowfullscreen></iframe>#}
+                <iframe src="" allowfullscreen></iframe>
+            </div>
+        {% endfor %}
+    </div>
+
+    <button id="btn-next" style="display: {{ showCarouselControls ? 'block' : 'none' }}">&gt;</button>
+</div>
