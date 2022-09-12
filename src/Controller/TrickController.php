@@ -10,8 +10,9 @@ use App\Form\VideoFormType;
 use App\Service\FileManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Psr\Log\LoggerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -143,9 +144,29 @@ class TrickController extends AbstractController
 
         return $this->render('trick/display.html.twig', [
             'trick' => $trick,
+            'comments' => $trick->getComments(),
             'picturesUri' => $picturesUri,
             'avatarsUri' => $avatarsUri,
             'commentForm' => $form->createView()
+        ]);
+    }
+
+    #[Route('/trick/comments/load/{offset}/{max}', name: 'app_trick_load_comments')]
+    public function loadMoreComments(ManagerRegistry $doctrine, int $offset, int $max): JsonResponse
+    {
+        $comments = $doctrine->getRepository(Comment::class)
+            ->findBy([], ["createdAt" => "DESC"], $max, $offset);
+
+        $avatarsUri = $this->getParameter('avatars_uri');
+
+        $template = $this->render('trick/comments.html.twig', [
+            'comments' => $comments,
+            'avatarsUri' => $avatarsUri
+        ])->getContent();
+
+        $response = (new JsonResponse())->setStatusCode(200);
+        return $response->setData([
+            'template' => $template
         ]);
     }
 

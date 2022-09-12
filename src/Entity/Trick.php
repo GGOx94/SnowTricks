@@ -31,6 +31,7 @@ class Trick
     private \DateTime $modifiedAt;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\OrderBy(["createdAt" => "DESC"])]
     private Collection $comments;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Picture::class, cascade: ['persist'], orphanRemoval: true)]
