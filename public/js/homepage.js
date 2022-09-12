@@ -1,6 +1,7 @@
 function loadMoreTricks()
 {
    let $tricksDiv = $('#tricks');
+   let currentCount = $('#tricks > div').length;
    let offset = $('.trick-card').length;
    let requestUrl = "/tricks/load/";
    let max = 15;
@@ -12,10 +13,10 @@ function loadMoreTricks()
       type: "POST",
 
       success: function (response) {
-         if(response.tricksCount < max) {
+         $tricksDiv.append(response.template);
+         if($('#tricks > div').length - currentCount < max) {
             $('#load-more-btn').css('display', 'none');
          }
-         $tricksDiv.append(response.template);
       },
 
       error: function() {

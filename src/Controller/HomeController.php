@@ -15,7 +15,7 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(ManagerRegistry $doctrine): Response
     {
-        $tricks = $doctrine->getRepository(Trick::class)->findBy([], ["createdAt" => "DESC"], 10);
+        $tricks = $doctrine->getRepository(Trick::class)->findBy([], ["createdAt" => "DESC"], 15);
         $picturesUri = $this->getParameter('tricks_pics_uri');
 
         return $this->render('home/index.html.twig', [
@@ -38,8 +38,7 @@ class HomeController extends AbstractController
 
         $response = (new JsonResponse())->setStatusCode(200);
         return $response->setData([
-            'template' => $template,
-            'tricksCount' => count($tricks)
+            'template' => $template
         ]);
     }
 }
