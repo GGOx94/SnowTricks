@@ -1,15 +1,16 @@
 {% extends 'base.html.twig' %}
 
+{% block head %}
+    <link rel="stylesheet" href="{{ asset('css/trick.css')}}"/>
+    <link rel="stylesheet" href="{{ asset('css/media-carousel.css')}}"/>
+    <script src="{{ asset('js/media-carousel.js') }}"></script>
+{% endblock %}
+
 {% block title %}{{ trick.title }}{% endblock %}
 
 {% block body %}
 
-    <link rel="stylesheet" href="{{ asset('css/trick.css')}}"/>
-
     <div class="trick-container container">
-
-        <link rel="stylesheet" href="{{ asset('css/media-carousel.css')}}"/>
-        <script src="{{ asset('js/media-carousel.js') }}"></script>
         <div id="carousel-template">
             {% include('trick/media_carousel.html.twig') %}
         </div>
