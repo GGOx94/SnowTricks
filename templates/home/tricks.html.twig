@@ -1,0 +1,23 @@
+{%  for trick in tricks %}
+    {% set useDefaultPic = trick.pictures is empty %}
+    <div class="trick-card">
+        <div class="top">
+            <a href="{{ path('app_trick', {'slug': trick.slug}) }}">
+                <img src="{{ useDefaultPic ? picturesUri ~ "default.png" : picturesUri ~ trick.slug ~ "/" ~ trick.pictures|first.fileName }}" alt="Image du trick {{ trick.title|raw }}">
+            </a>
+        </div>
+        <div class="bottom">
+            <a class="link" href="{{ path('app_trick', {'slug': trick.slug}) }}">{{ trick.title|raw }}</a>
+            {% if app.user.name is defined %}
+                <div class="trick-buttons">
+                    <a class="button" href="{{ path('app_trick_edit', {'slug' : trick.slug}) }}">
+                        <img src="/medias/icons/pencil.png" alt="Modifier le trick"/>
+                    </a>
+                    <a class="button" href="{{ path('app_trick_delete', {'slug' : trick.slug}) }}"> {# TODO CONFIRM DELETE TRICK #}
+                        <img src="/medias/icons/trash.png" alt="Supprimer le trick"/>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
