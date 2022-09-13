@@ -22,3 +22,10 @@
 /notes.txt
 /tmp/
 ###< TMP ###
+
+###> UPLOADS ###
+/public/uploads/avatars/*
+/public/uploads/pictures/*
+!/public/uploads/avatars/default.png
+!/public/uploads/pictures/default.png
+###< UPLOADS ###

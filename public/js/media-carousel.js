@@ -16,6 +16,7 @@ function openForm(ajaxUrl, formType)
 
 function postForm()
 {
+    initToast();
     $.ajax({
         url: formContainer.data('app-url'),
         type: "POST",
@@ -23,14 +24,20 @@ function postForm()
         contentType:false, processData:false, cache:false,
 
         success: function (response) {
-            $("#carousel-template").html(response.template);
-            //TODO toast success / err
-            closeForm();
-            refreshCarouselControls();
+            if(typeof response.template !== 'undefined') {
+                toastr.success(response.message);
+                $("#carousel-template").html(response.template);
+                closeForm();
+                refreshCarouselControls();
+            } else {
+                toastr.error(response.message);
+                closeForm();
+            }
         },
 
         error: function() {
-            alert('Un problème est survenu lors de l\'opération.');
+            toastr.error("Un problème est survenu lors de l'opération.");
+            closeForm();
         }
     });
 }
@@ -42,17 +49,18 @@ function closeForm()
 
 function deleteMedia(ajaxUrl)
 {
+    initToast();
     $.ajax({
         url: ajaxUrl,
         type: "POST",
 
         success: function (response) {
             $("#carousel-template").html(response.template);
-            //TODO toast success / err
+            toastr.success(response.message);
         },
 
         error: function() {
-            alert('Un problème est survenu lors de l\'opération.');
+            toastr.error("Un problème est survenu lors de l'opération.");
         }
     });
 }

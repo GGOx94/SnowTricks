@@ -27,7 +27,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $email;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private string $avatar; // Url of avatar in public/uploads/avatars/...[png/jpg]
+    private string $avatar;
 
     #[ORM\Column(type: 'string', length: 64)]
     private string $password;

@@ -20,6 +20,11 @@ class Video
     #[ORM\Column(type: 'string', length: 80)]
     private string $embedUrl;
 
+    // Those properties are used in the embedded url builder function
+    // and the constraints of the VideoFormType
+    public const ytUrlStart = "https://www.youtube.com/watch?v=";
+    public const dlUrlStart = "https://www.dailymotion.com/video/";
+
     public function getId(): ?int
     {
         return $this->id;
@@ -49,17 +54,14 @@ class Video
             return $this;
         }
 
-        $ytUrlStart = "https://www.youtube.com/watch?v=";
-        $dlUrlStart = "https://www.dailymotion.com/video/";
-
-        if(str_contains($videoUrl, $ytUrlStart))
+        if(str_contains($videoUrl, self::ytUrlStart))
         {
-            $vidId = trim($videoUrl, $ytUrlStart);
+            $vidId = trim($videoUrl, self::ytUrlStart);
             $this->embedUrl = ("https://www.youtube.com/embed/" . $vidId);
         }
-        elseif (str_contains($videoUrl, $dlUrlStart))
+        elseif (str_contains($videoUrl, self::dlUrlStart))
         {
-            $vidId = trim($videoUrl, $dlUrlStart);
+            $vidId = trim($videoUrl, self::dlUrlStart);
             $this->embedUrl = ("https://www.dailymotion.com/embed/video/" . $vidId);
         }
 
