@@ -12,8 +12,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\AsciiSlugger;
@@ -24,14 +26,20 @@ class TrickController extends AbstractController
 {
     protected FileManager $fileManager;
     protected EntityManagerInterface $manager;
+    protected RequestStack $requestStack;
 
     protected EntityRepository $repo;
     protected string $picturesUri;
 
-    public function __construct(FileManager $fileManager, EntityManagerInterface $entityManager, string $picturesUri)
+    public function __construct(
+        FileManager $fileManager,
+        EntityManagerInterface $entityManager,
+        RequestStack $requestStack,
+        string $picturesUri)
     {
         $this->fileManager = $fileManager;
         $this->manager = $entityManager;
+        $this->requestStack = $requestStack;
 
         $this->repo = $entityManager->getRepository(Trick::class);
         $this->picturesUri = $picturesUri;
@@ -47,8 +55,18 @@ class TrickController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
-            $trick->setCreatedAt(new \DateTimeImmutable());
+            //Generate a slug and check if it already exists before persisting the new Trick
             $slug = (new AsciiSlugger())->slug($trick->getTitle());
+            $existing = $this->repo->findBy(['slug' => $slug]);
+            if( !empty($existing) )
+            {
+                $form->addError(new FormError("Ce titre est indisponible"));
+                return $this->render('trick/create_trick.html.twig', [
+                    'formTrick' => $form->createView()
+                ]);
+            }
+
+            $trick->setCreatedAt(new \DateTimeImmutable());
             $trick->setSlug($slug);
 
             $this->handleFormPictures($form->get('pictures')->getData(), $slug);

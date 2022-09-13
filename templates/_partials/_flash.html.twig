@@ -17,11 +17,16 @@
             'hideMethod': 'fadeOut',
         };
     }
+
+   $( document ).ready(function() {
+       initToast();
+   });
+
 </script>
 
 <style>
     .toast {
-        margin-top: 5rem !important; /*TODO: math to margin from top of screen but not between toasts (vh ?)*/
+        margin-top: 5rem !important;
     }
 </style>
 
@@ -30,11 +35,11 @@
         {% if loop.first %}
             <script> initToast(); </script>
         {% endif %}
-
         <script> toastr.{{ label }}("{{ message }}"); </script>
     {% endfor %}
 {% endfor %}
-        {# Standard Bootstrap flash messages below #}
+
+{# Standard Bootstrap flash messages below #}
 {#        <div class="alert alert-{{ label }} alert-dismissible" role="alert">#}
 {#            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>#}
 {#            <div class="alert-message">#}

@@ -37,12 +37,16 @@ class FileManager
         }
     }
 
-    public function uploadTrickPicture(UploadedFile $file, string $trickSlug) : string
+    public function uploadTrickPicture(UploadedFile $file, string $trickSlug, string $oldPicName = null) : string
     {
         $targetDir = $this->tricksDir . $trickSlug;
 
         if( !$this->filesystem->exists($targetDir) ) {
             $this->filesystem->mkdir($targetDir);
+        }
+
+        if($oldPicName !== null) {
+            $this->deleteTrickPicture($trickSlug, $oldPicName);
         }
 
         return $this->upload($file, $targetDir);

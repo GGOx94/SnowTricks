@@ -26,7 +26,7 @@ class RegistrationFormType extends AbstractType
                     new Assert\NotBlank([ 'message' => 'Vous devez entrez un nom' ]),
                     new Assert\Length([
                         'min' => 3, 'minMessage' => 'Votre nom doit faire au moins {{ limit }} caractères.',
-                        'max' => 20, 'maxMessage' => 'Votre nom ne peux pas faire plus de {{ limit }} caractères.'
+                        'max' => 20, 'maxMessage' => 'Votre nom ne peut pas faire plus de {{ limit }} caractères.'
                     ]),
                 ],
             ])
@@ -48,8 +48,8 @@ class RegistrationFormType extends AbstractType
                         new Assert\NotBlank([ 'message' => 'Vous devez entrez un mot de passe' ]),
                         new Assert\Length([
                             'min' => 6, 'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} caractères.',
-                            'max' => 50, 'maxMessage' => 'Votre mot de passe ne peux pas faire plus de {{ limit }} caractères.'
-                        ]),
+                            'max' => 50, 'maxMessage' => 'Votre mot de passe ne peut pas faire plus de {{ limit }} caractères.'
+                        ])
                     ],
                     'label' => 'Mot de passe'
                 ],

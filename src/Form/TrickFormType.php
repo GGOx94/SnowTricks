@@ -13,12 +13,25 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class TrickFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class, ['label' => 'Titre'])
+            ->add('title', TextType::class, [
+                'constraints' => [
+                    new Assert\Length([
+                        'min' => 5, 'minMessage' => 'Le titre doit faire au moins {{ limit }} caractères.',
+                        'max' => 30, 'maxMessage' => 'Le titre ne peut pas faire plus de {{ limit }} caractères.'
+                    ]),
+                    new Assert\NotBlank([ 'message' => 'Vous devez entrez un titre pour le Trick' ]),
+                    new Assert\Regex("/^[\pL\pZ\pN'-]*$/u",
+                        'Certains caractères spéciaux sont interdits dans le titre du Trick'),
+                ],
+                'label' => 'Titre'
+            ])
 
             ->add('description', TextareaType::class, ['label' => 'Description'])
 
@@ -37,14 +50,16 @@ class TrickFormType extends AbstractType
                     'entry_type' => PictureFormType::class,
                     'entry_options' => ['label' => false],
                     'allow_add' => true,
-                    'by_reference' => false
+                    'by_reference' => false,
+                    'label' => 'Images'
                 ])
 
                 ->add('videos', CollectionType::class, [
                     'entry_type' => VideoFormType::class,
                     'entry_options' => ['label' => false ],
                     'allow_add' => true,
-                    'by_reference' => false
+                    'by_reference' => false,
+                    'label' => 'Vidéos'
                 ]);
         }
 

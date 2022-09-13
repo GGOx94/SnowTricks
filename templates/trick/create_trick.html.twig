@@ -1,37 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TrickController :: CREATE !{% endblock %}
+{% block title %}Créer un Trick{% endblock %}
 
 {% block body %}
 
 <h1 class="text-center" style="margin: 80px;">Ajouter un trick</h1>
 
-{{  form_start(formTrick) }}
-    <h3>Images</h3>
-    <ul class="pictures"
-        data-index="{{ formTrick.pictures|length > 0 ? formTrick.pictures|last.vars.name + 1 : 0 }}"
-        data-prototype="{{ form_widget(formTrick.pictures.vars.prototype)|e('html_attr') }}">
+<div class="form-control">
 
-        {% for pic in formTrick.pictures %}
-            <li>{{ form_row(pic.file) }}</li>
-        {% endfor %}
+    {{ form_start(formTrick) }}
 
-    </ul>
-    <button type="button" class="add_item_link" data-collection-holder-class="pictures">Ajouter une image</button>
+    {{ form_errors(formTrick) }}
 
-    <h3>Vidéos</h3>
-    <ul class="videos"
-        data-index="{{ formTrick.videos|length > 0 ? formTrick.videos|last.vars.name + 1 : 0 }}"
-        data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e('html_attr') }}">
+    {{ form_row(formTrick.title) }}
+    {{ form_row(formTrick.description) }}
+    {{ form_row(formTrick.category) }}
 
-        {% for vid in formTrick.videos %}
-            <li>{{ form_row(vid.embedUrl) }}</li>
-        {% endfor %}
+        <h3>{{ form_label(formTrick.pictures) }}</h3>
+        <ul class="pictures"
+            data-index="{{ formTrick.pictures|length > 0 ? formTrick.pictures|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_widget(formTrick.pictures.vars.prototype)|e('html_attr') }}">
 
-    </ul>
-    <button type="button" class="add_item_link" data-collection-holder-class="videos">Ajouter une vidéo</button>
+            {% for pic in formTrick.pictures %}
+                <li>{{ form_row(pic.file) }}</li>
+            {% endfor %}
 
-{{  form_end(formTrick) }}
+        </ul>
+        <button type="button" class="add_item_link" data-collection-holder-class="pictures">Ajouter une image</button>
+
+        <h3>{{ form_label(formTrick.videos) }}</h3>
+        <ul class="videos"
+            data-index="{{ formTrick.videos|length > 0 ? formTrick.videos|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e('html_attr') }}">
+
+            {% for vid in formTrick.videos %}
+                <li>{{ form_row(vid.embedUrl) }}</li>
+            {% endfor %}
+
+        </ul>
+        <button type="button" class="add_item_link" data-collection-holder-class="videos">Ajouter une vidéo</button>
+
+    {{ form_row(formTrick.submit) }}
+
+    {# Add the CSRF Token since we won't render the rest of the form #}
+    {{ form_row(formTrick._token) }}
+    {{ form_end(formTrick, {'render_rest': false}) }}
+</div>
 
 
 
