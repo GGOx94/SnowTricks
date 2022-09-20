@@ -7,6 +7,7 @@ use App\Entity\Trick;
 use App\Entity\Video;
 use App\Form\PictureFormType;
 use App\Form\VideoFormType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -113,8 +114,8 @@ class TrickJsonController extends TrickController
             return $this->buildJsonResponse($trick, "Image modifiée avec succès !");
         }
 
-        return $this->buildJsonError("Erreur :<br>
-                    Seules les images <b>.png</b>, <b>.jpg</b> et <b>.bmp</b> de moins de <b>10mo</b> sont acceptées.");
+        $errMsg = $this->getFormErrorString($form);
+        return $this->buildJsonError($errMsg);
     }
 
     #[Route('/trick/{slug}/edit/picture/{id}/delete', name: 'app_trick_delete_picture')]
@@ -133,6 +134,16 @@ class TrickJsonController extends TrickController
         return $this->buildJsonResponse($trick, "Image supprimée avec succès !");
     }
 
+    private function getFormErrorString(Form $form) : string
+    {
+        $errors = [];
+        foreach ($form->getErrors(true, false) as $error) {
+            $errors[] = $error->current()->getMessage();
+        }
+
+        return empty($errors) ? "Un problème est survenu lors de l'opération" : $errors[0];
+    }
+
     private function buildJsonResponse(Trick $trick, string $message = null) : JsonResponse
     {
         $template = $this->render('trick/media_carousel.html.twig', [
@@ -149,7 +160,7 @@ class TrickJsonController extends TrickController
 
     private function buildJsonError(string $message) : JsonResponse
     {
-        $response = (new JsonResponse())->setStatusCode(200);
+        $response = (new JsonResponse())->setStatusCode(400);
         return $response->setData([
             'message' => $message
         ]);

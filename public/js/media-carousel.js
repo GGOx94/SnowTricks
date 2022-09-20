@@ -24,19 +24,15 @@ function postForm()
         contentType:false, processData:false, cache:false,
 
         success: function (response) {
-            if(typeof response.template !== 'undefined') {
-                toastr.success(response.message);
-                $("#carousel-template").html(response.template);
-                closeForm();
-                refreshCarouselControls();
-            } else {
-                toastr.error(response.message);
-                closeForm();
-            }
+            toastr.success(response.message);
+            $("#carousel-template").html(response.template);
+            closeForm();
+            refreshCarouselControls();
         },
 
-        error: function() {
-            toastr.error("Un problème est survenu lors de l'opération.");
+        error: function(err) {
+            console.log(err);
+            toastr.error(err.responseJSON.message);
             closeForm();
         }
     });
