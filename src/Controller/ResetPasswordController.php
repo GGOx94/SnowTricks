@@ -42,7 +42,7 @@ class ResetPasswordController extends AbstractController
         $payload = $this->tokenSvc->getPayload($token);
         $user = $this->userRepo->findOneBy(['email' => $payload['user_email']]);
 
-        $form = $this->createForm(PasswordFormType::class);
+        $form = $this->createForm(PasswordFormType::class, null, ['submit' => true]);
         $form->handleRequest($req);
 
         if ($form->isSubmitted() && $form->isValid()) {
