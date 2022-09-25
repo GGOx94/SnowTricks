@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Trick
 {
     #[ORM\Id]
@@ -49,6 +51,12 @@ class Trick
         $this->comments = new ArrayCollection();
         $this->pictures = new ArrayCollection();
         $this->videos = new ArrayCollection();
+    }
+
+    #[ORM\PreUpdate]
+    public function updateModifiedAt(PreUpdateEventArgs $eventArgs): void
+    {
+        $this->modifiedAt = new \DateTime();
     }
 
     public function getId(): ?int

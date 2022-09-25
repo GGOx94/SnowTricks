@@ -70,8 +70,8 @@ function refreshCarouselControls()
 
     if(prv != null && nxt != null)
     {
-        nxt.addEventListener('click', function() { mediaCrsl.scrollLeft += media.clientWidth; });
-        prv.addEventListener('click', function() { mediaCrsl.scrollLeft -= media.clientWidth; });
+        nxt.addEventListener('click', function() { mediaCrsl.scrollLeft += media.clientWidth + 2; });
+        prv.addEventListener('click', function() { mediaCrsl.scrollLeft -= media.clientWidth + 2; });
     }
 }
 

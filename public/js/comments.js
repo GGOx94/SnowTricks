@@ -1,8 +1,8 @@
-function loadMoreComments()
+function loadMoreComments(slug)
 {
     let currentCount = $('#trick-comments > div').length;
     let offset = $('.comment').length;
-    let requestUrl = "/trick/comments/load/";
+    let requestUrl = "/trick/" + slug + "/comments/load/";
     let max = 10;
 
     requestUrl += offset + "/" + max;

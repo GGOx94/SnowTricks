@@ -1,13 +1,13 @@
-{%  for com in comments|slice(0,10) %}
+{%  for com in comments %}
 
-    <div class="comment">
+    <div class="comment row">
         <div class="author col-2">
             <img src="{{ avatarsUri }}{{ com.author.avatar }}" alt="Avatar de l'utilisateur {{ com.author.name }}">
             <p>{{ com.author.name }}</p>
         </div>
-        <div class="content col-10 px-0 mx-0">
-            <p>{{ com.content }}</p>
-            <small>Publié le : {{ com.createdAt|date("d/m/Y") }}</small>
+        <div class="content col-8">
+            <p class="text-break">{{ com.content }}</p>
+            <small class="created-at">Publié le : {{ com.createdAt|date("d/m/Y") }}</small>
         </div>
     </div>
 
