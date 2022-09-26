@@ -199,6 +199,11 @@ class TrickController extends AbstractController
         foreach ($pictures as $pic)
         {
             $file = $pic->getFile();
+
+            if($file === null) {
+                continue;
+            }
+
             $fileName = $this->fileManager->uploadTrickPicture($file, $trickSlug);
             $pic->setFileName($fileName);
         }

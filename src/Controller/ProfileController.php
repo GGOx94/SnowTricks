@@ -2,16 +2,15 @@
 
 namespace App\Controller;
 
+use App\Form\PictureFormType;
 use App\Service\FileManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use function PHPUnit\Framework\throwException;
 
 class ProfileController extends AbstractController
 {
@@ -36,37 +35,33 @@ class ProfileController extends AbstractController
         }
 
         $user = $this->getUser();
+        $avatarsUri = $this->getParameter('avatars_uri');
 
-        $form = $this->createFormBuilder($user)
-            ->add('avatar', FileType::class, [ 'mapped' => false, 'label' => 'Changer mon avatar' ])
-            ->add('Enregistrer', SubmitType::class, [ 'attr' => [ 'class' => 'btn btn-success']])
-            ->getForm();
-
+        $form = $this->createForm(PictureFormType::class, null, ['submit' => true]);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
         {
-            // TODO UPLOADS : check sizes / types ...
-            $avatarFile = $form->get('avatar')->getData();
-            if (!$avatarFile) {
-                throwException(new \Exception("TODO: handle form->get('avatar')->getData() fail"));
+            $avatarFile = $form->get('file')->getData();
+
+            if(!empty($avatarFile)) {
+                // Upload the new avatar
+                $avatarFileName = $this->fileManager->uploadAvatar($avatarFile);
+
+                // Remove the old avatar if not default
+                $oldAvatar = $user->getAvatar();
+                if($oldAvatar !== "default.png") {
+                    $this->fileManager->removeAvatar($user->getAvatar());
+                }
+
+                $this->manager->persist($user->setAvatar($avatarFileName));
+                $this->manager->flush();
             }
-
-            // Upload the new avatar
-            $avatarFileName = $this->fileManager->uploadAvatar($avatarFile);
-
-            // Remove the old avatar if not default
-            $oldAvatar = $user->getAvatar();
-            if($oldAvatar !== "default.png") {
-                $this->fileManager->removeAvatar($user->getAvatar());
-            }
-
-            $this->manager->persist($user->setAvatar($avatarFileName));
-            $this->manager->flush();
         }
 
         return $this->render('profile/index.html.twig', [
-            'last_username' => $user->getName(),
+            'avatarsUri' => $avatarsUri,
+            'user' => $user,
             'formAvatar' => $form->createView(),
             'error' => null
         ]);

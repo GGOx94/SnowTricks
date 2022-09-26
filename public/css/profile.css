@@ -1,0 +1,22 @@
+.profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile img {
+    border: 1px solid black;
+    border-radius: 50%;
+    max-width: 250px;
+}
+
+.profile h2 {
+    font-weight: bolder;
+}
+
+.profile a {
+    padding: 0.5rem 1rem;
+}
+

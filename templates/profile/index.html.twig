@@ -1,15 +1,36 @@
 {% extends 'base.html.twig' %}
 
+{% block head %}
+    <link rel="stylesheet" href="{{ asset('css/profile.css')}}"/>
+{% endblock %}
+
+{% block title %}Mon profil{% endblock %}
+
 {% block body %}
+<div class="container mt-5">
+
+    <div class="profile">
+        <img src="{{ avatarsUri }}{{ user.avatar }}" alt="Avatar de {{ user.name }}">
+        <h2>{{ user.name }}</h2>
+        <a href="{{ path('app_logout') }}" class="btn btn-danger">Se déconnecter</a>
+    </div>
 
     {% if error %}
-
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-
+        <div>
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
     {% else %}
-        {{  form(formAvatar) }}
-        <a href="{{ path('app_logout') }}" class="btn btn-danger">Se déconnecter</a>
-
+        <hr/>
+        <h3 class="mt-3 text-center">Modifier mon avatar :</h3>
+        <div class="d-flex justify-content-center">
+            {{  form_start(formAvatar) }}
+            <div class="d-flex gap-2 p-3">
+                {{ form_row(formAvatar.file) }}
+                {{ form_row(formAvatar.submit) }}
+            </div>
+            {{  form_end(formAvatar) }}
+        </div>
     {% endif %}
 
+</div>
 {% endblock %}

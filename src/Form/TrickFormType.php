@@ -42,7 +42,7 @@ class TrickFormType extends AbstractType
             ]);
 
         // Disable file pickers for pictures and text fields for videos url in 'edit' mode
-        // While editing a trick, there will be dedicated buttons to add new pictures or embed videos
+        // While editing a trick, there will be dedicated buttons to add new pictures or embedded videos
         if(!$options['edit_mode'])
         {
             $builder

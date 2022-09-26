@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\PictureRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: PictureRepository::class)]
 class Picture
 {
@@ -21,8 +20,8 @@ class Picture
     private string $fileName;
 
     // Unmapped by Doctrine, used to multi-upload images by a collection of forms in trick creation / update
-    private UploadedFile $file;
-    public function getFile() : UploadedFile
+    private ?UploadedFile $file = null;
+    public function getFile() : ?UploadedFile
     {
         return $this->file;
     }
