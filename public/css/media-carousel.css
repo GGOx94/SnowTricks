@@ -65,11 +65,24 @@
 }
 
 .popup-form-container {
-    display: none;
     position: fixed;
-    left: 35%;
-    top: 5%;
-    border: 3px solid #999999;
-    background-color: lightgrey;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    max-width: 500px;
+
+    display: none;
+
+    border: 2px solid black;
+    border-radius: 20px;
+    background-color: white;
     z-index: 9;
+    padding: 2rem;
+}
+
+.popup-form-container .form-row label {
+    font-weight: bold;
+    font-size: 14pt;
+    margin-bottom: 15px;
 }

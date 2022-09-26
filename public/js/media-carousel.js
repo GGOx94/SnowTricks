@@ -31,7 +31,6 @@ function postForm()
         },
 
         error: function(err) {
-            console.log(err);
             toastr.error(err.responseJSON.message);
             closeForm();
         }
@@ -49,6 +48,10 @@ function deleteMedia(ajaxUrl)
     $.ajax({
         url: ajaxUrl,
         type: "POST",
+
+        beforeSend:function(){
+            return confirm("Voulez-vous vraiment supprimer ce média ?");
+        },
 
         success: function (response) {
             $("#carousel-template").html(response.template);

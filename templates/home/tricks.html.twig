@@ -13,7 +13,8 @@
                     <a class="button" href="{{ path('app_trick_edit', {'slug' : trick.slug}) }}">
                         <img src="/medias/icons/pencil.png" alt="Modifier le trick"/>
                     </a>
-                    <a class="button" href="{{ path('app_trick_delete', {'slug' : trick.slug}) }}"> {# TODO CONFIRM DELETE TRICK #}
+                    <a class="button" href="{{ path('app_trick_delete', {'slug' : trick.slug}) }}"
+                       onclick="return confirm('Voulez-vous vraiment supprimer ce Trick ?')">
                         <img src="/medias/icons/trash.png" alt="Supprimer le trick"/>
                     </a>
                 </div>
