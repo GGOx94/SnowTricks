@@ -45,19 +45,26 @@
             <div class="media">
                 {% if editMode %}
                     <div class="media-controls">
-                        <a  onclick="openForm(
-                                '{{ path('app_trick_edit_picture', {'slug' : trick.slug, 'id' : pic.id }) }}',
-                                'form-picture'
-                            )" >
+                        <a onclick="openForm('{{ path('app_trick_edit_picture', {'slug' : trick.slug, 'id' : pic.id }) }}','form-picture')" >
                             <img src="/medias/icons/pencil.png" alt="Modifier l'image"/>
                         </a>
-                        <a
-                           onclick="deleteMedia('{{ path('app_trick_delete_picture', {'slug' : trick.slug, 'id' : pic.id }) }}')">
+                        <a onclick="deleteMedia('{{ path('app_trick_delete_picture', {'slug' : trick.slug, 'id' : pic.id }) }}')">
                             <img src="/medias/icons/trash.png" alt="Supprimer l'image"/>
                         </a>
                     </div>
                 {% endif %}
-                <img src="{{ picturesUri ~ trick.slug ~ "/" ~ pic.fileName }}" alt="Image du trick {{ trick.title|raw }}">
+
+                {% set imgSrcPath = (picturesUri ~ trick.slug ~ "/" ~ pic.fileName) %}
+                {# Thumbnail picture in media carousel #}
+                <a href="#trick-pic-{{ loop.index }}">
+                    <img class="media-pic" src="{{ imgSrcPath }}" alt="Image du trick {{ trick.title|raw }}">
+                </a>
+                {# Overlay picture on click #}
+                <a href="#!" class="overlay" id="trick-pic-{{ loop.index }}">
+                    <div class="overlay-container">
+                        <img src="{{ imgSrcPath }}" alt="Image du trick {{ trick.title|raw }}">
+                    </div>
+                </a>
             </div>
         {% endfor %}
 
@@ -65,18 +72,15 @@
             <div class="media">
                 {% if editMode %}
                     <div class="media-controls">
-                        <a onclick="openForm(
-                               '{{ path('app_trick_edit_video', {'slug' : trick.slug, 'id' : vid.id }) }}',
-                                'form-video')">
+                        <a onclick="openForm('{{ path('app_trick_edit_video', {'slug' : trick.slug, 'id' : vid.id }) }}','form-video')">
                             <img src="/medias/icons/pencil.png" alt="Modifier la vidéo"/>
                         </a>
-                        <a onclick="deleteMedia(
-                            '{{ path('app_trick_delete_video', {'slug' : trick.slug, 'id' : vid.id }) }}')">
+                        <a onclick="deleteMedia('{{ path('app_trick_delete_video', {'slug' : trick.slug, 'id' : vid.id }) }}')">
                             <img src="/medias/icons/trash.png" alt="Supprimer la vidéo"/>
                         </a>
                     </div>
                 {% endif %}
-                <iframe src="{{ vid.embedUrl }}?autoplay=0" allowfullscreen></iframe>
+                <iframe class="media-embed-vid" src="{{ vid.embedUrl }}?autoplay=0" allowfullscreen></iframe>
             </div>
         {% endfor %}
     </div>
@@ -107,7 +111,7 @@
                     </a>
                 </div>
             {% endif %}
-            <img src="{{ picturesUri ~ trick.slug ~ "/" ~ pic.fileName }}" alt="Image du trick {{ trick.title|raw }}">
+            <img class="media-pic" src="{{ picturesUri ~ trick.slug ~ "/" ~ pic.fileName }}" alt="Image du trick {{ trick.title|raw }}">
         </div>
     {% endfor %}
 
@@ -123,7 +127,7 @@
                     </a>
                 </div>
             {% endif %}
-            <iframe src="{{ vid.embedUrl }}?autoplay=0" allowfullscreen></iframe>
+            <iframe class="media-embed-vid" src="{{ vid.embedUrl }}?autoplay=0" allowfullscreen></iframe>
         </div>
     {% endfor %}
 </div>
