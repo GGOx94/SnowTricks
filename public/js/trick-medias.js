@@ -25,9 +25,9 @@ function postForm()
 
         success: function (response) {
             toastr.success(response.message);
-            $("#carousel-template").html(response.template);
-            closeForm();
+            $("#trick-media-template").html(response.template);
             refreshCarouselControls();
+            closeForm();
         },
 
         error: function(err) {
@@ -54,7 +54,8 @@ function deleteMedia(ajaxUrl)
         },
 
         success: function (response) {
-            $("#carousel-template").html(response.template);
+            $("#trick-media-template").html(response.template);
+            refreshCarouselControls();
             toastr.success(response.message);
         },
 

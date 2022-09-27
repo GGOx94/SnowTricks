@@ -1,3 +1,31 @@
+.hero {
+    position: relative;
+    background-color: black;
+}
+
+.hero .picture {
+    width:100%;
+    max-height: 600px;
+    border: 1px solid black;
+    opacity: 0.6;
+    z-index: 5;
+}
+
+.hero .title {
+    position: absolute;
+    top:45%;
+    color: whitesmoke;
+    z-index: 6;
+}
+
+.trick-media-list-button {
+    display: none;
+}
+
+.trick-media-list {
+    display: none;
+}
+
 .carousel-container {
     display: flex;
     justify-items: center;
@@ -85,4 +113,48 @@
     font-weight: bold;
     font-size: 14pt;
     margin-bottom: 15px;
+}
+
+@media only screen and (max-width: 768px) {
+    /*** Trick Medias ***/
+    .carousel-container {
+        display: none;
+    }
+
+    .trick-media-list-button {
+        display: block;
+    }
+
+    .trick-media-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .trick-media-list .media {
+        width: 80vw;
+        align-self: center;
+    }
+
+    /*** Medias Edit ***/
+    .popup-form-container {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 95vw;
+        border: 1px solid black;
+        background-color: white;
+        z-index: 9;
+        padding: 1rem;
+    }
+
+    .popup-form-container .form-row label {
+        font-weight: bold;
+        font-size: 14pt;
+        margin-bottom: 15px;
+    }
 }

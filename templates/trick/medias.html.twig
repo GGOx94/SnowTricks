@@ -1,7 +1,6 @@
 {% set showCarouselControls = ((trick.pictures|length - 1 + trick.videos|length) > 4) %}
 {% set editMode = (trick.slug ~ '/edit') in app.request.uri %}
-
- {% set useDefaultPic = trick.pictures is empty %}
+{% set useDefaultPic = trick.pictures is empty %}
 
 <div class="hero text-center">
     <h1 class="title display-1 fw-bold text-center w-100">{{ trick.title|raw }}</h1>
@@ -35,6 +34,9 @@
          class="picture" alt="Présentation du trick {{ trick.title|raw }}">
 </div>
 
+{# ------------------------------------------------------ #}
+{# Trick Media Carousel for desktop environment #}
+{# ------------------------------------------------------ #}
 <div class="carousel-container">
     <button id="btn-prev" style="display: {{ showCarouselControls ? 'block' : 'none' }}">&lt;</button>
 
@@ -80,4 +82,48 @@
     </div>
 
     <button id="btn-next" style="display: {{ showCarouselControls ? 'block' : 'none' }}">&gt;</button>
+</div>
+
+{# ------------------------------------------------------ #}
+{# Trick Media List (collapsed) for mobile devices #}
+{# ------------------------------------------------------ #}
+<div class="trick-media-list-button text-center w-100 mt-4">
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#media-list-collapse"
+            aria-expanded="false" aria-controls="media-list-collapse">
+        Voir les médias
+    </button>
+</div>
+
+<div class="collapse trick-media-list" id="media-list-collapse">
+    {% for pic in trick.pictures[1:] %} {# Skip first picture, displayed as hero above media list #}
+        <div class="media">
+            {% if editMode %}
+                <div class="media-controls">
+                    <a onclick="openForm('{{ path('app_trick_edit_picture', {'slug' : trick.slug, 'id' : pic.id }) }}','form-picture')" >
+                        <img src="/medias/icons/pencil.png" alt="Modifier l'image"/>
+                    </a>
+                    <a onclick="deleteMedia('{{ path('app_trick_delete_picture', {'slug' : trick.slug, 'id' : pic.id }) }}')">
+                        <img src="/medias/icons/trash.png" alt="Supprimer l'image"/>
+                    </a>
+                </div>
+            {% endif %}
+            <img src="{{ picturesUri ~ trick.slug ~ "/" ~ pic.fileName }}" alt="Image du trick {{ trick.title|raw }}">
+        </div>
+    {% endfor %}
+
+    {% for vid in trick.videos %}
+        <div class="media">
+            {% if editMode %}
+                <div class="media-controls">
+                    <a onclick="openForm('{{ path('app_trick_edit_video', {'slug' : trick.slug, 'id' : vid.id }) }}','form-video')">
+                        <img src="/medias/icons/pencil.png" alt="Modifier la vidéo"/>
+                    </a>
+                    <a onclick="deleteMedia('{{ path('app_trick_delete_video', {'slug' : trick.slug, 'id' : vid.id }) }}')">
+                        <img src="/medias/icons/trash.png" alt="Supprimer la vidéo"/>
+                    </a>
+                </div>
+            {% endif %}
+            <iframe src="{{ vid.embedUrl }}?autoplay=0" allowfullscreen></iframe>
+        </div>
+    {% endfor %}
 </div>
