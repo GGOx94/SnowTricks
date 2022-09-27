@@ -139,7 +139,6 @@ class TrickController extends AbstractController
     public function display(string $slug, Request $request): Response
     {
         $trick = $this->repo->findOneOr404(['slug' => $slug]);
-
         $comment = new Comment();
 
         $form = $this->createForm(CommentFormType::class, $comment);
@@ -157,23 +156,30 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('app_trick', [ 'slug' => $slug ]);
         }
 
+        $comments = $this->manager->getRepository(Comment::class)->findBy(
+            ["trick" => $trick],
+            ["createdAt" => "DESC"],
+            10
+        );
+
         $avatarsUri = $this->getParameter('avatars_uri');
         $picturesUri = $this->getParameter('tricks_pics_uri');
 
         return $this->render('trick/display.html.twig', [
             'trick' => $trick,
-            'comments' => $trick->getComments(),
+            'comments' => $comments,
             'picturesUri' => $picturesUri,
             'avatarsUri' => $avatarsUri,
             'commentForm' => $form->createView()
         ]);
     }
 
-    #[Route('/trick/comments/load/{offset}/{max}', name: 'app_trick_load_comments')]
-    public function loadMoreComments(ManagerRegistry $doctrine, int $offset, int $max): JsonResponse
+    #[Route('/trick/{slug}/comments/load/{offset}/{max}', name: 'app_trick_load_comments')]
+    public function loadMoreComments(ManagerRegistry $doctrine, string $slug, int $offset, int $max): JsonResponse
     {
+        $trick = $this->repo->findOneOr404(['slug' => $slug]);
         $comments = $doctrine->getRepository(Comment::class)
-            ->findBy([], ["createdAt" => "DESC"], $max, $offset);
+            ->findBy(["trick" => $trick], ["createdAt" => "DESC"], $max, $offset);
 
         $avatarsUri = $this->getParameter('avatars_uri');
 
@@ -193,6 +199,11 @@ class TrickController extends AbstractController
         foreach ($pictures as $pic)
         {
             $file = $pic->getFile();
+
+            if($file === null) {
+                continue;
+            }
+
             $fileName = $this->fileManager->uploadTrickPicture($file, $trickSlug);
             $pic->setFileName($fileName);
         }

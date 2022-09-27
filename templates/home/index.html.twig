@@ -9,20 +9,28 @@
 
 {% block body %}
 
-    <div class="hero">
+    <div class="hero" id="hero">
         <h1>SnowTricks</h1>
         <p class="hero-text">Partagez votre passion !</p>
+        <a href="#tricks" id="navHeroBtn" class="nav-btn btn btn-info">
+            <img src="/medias/icons/arrow.png" alt="Se déplacer dans la page"/>
+        </a>
     </div>
-
-    <a href="#tricks" class="nav-btn btn btn-info" >V</a>
 
     <div id="tricks">
         {% include('home/tricks.html.twig') %}
         {# This div will be fed by ajax request to HomeController, fetching a limited number of tricks : see js/homepage.js #}
     </div>
 
-        {# TODO BUTTON HERE #}
-    <a id="load-more-btn" class="text-center" onclick="loadMoreTricks()">[LOAD MORE]</a>
+    <div class="text-center mb-3">
+        <a id="load-more-btn" class="btn btn-info" onclick="loadMoreTricks()">Charger plus de tricks</a>
+    </div>
+
+    <div class="btn-container">
+        <a href="#tricks" id="navTricksBtn" class="nav-btn btn btn-info">
+            <img src="/medias/icons/arrow.png" alt="Se déplacer dans la page"/>
+        </a>
+    </div>
 
 {% endblock %}
 

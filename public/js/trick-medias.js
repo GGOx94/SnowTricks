@@ -25,13 +25,12 @@ function postForm()
 
         success: function (response) {
             toastr.success(response.message);
-            $("#carousel-template").html(response.template);
-            closeForm();
+            $("#trick-media-template").html(response.template);
             refreshCarouselControls();
+            closeForm();
         },
 
         error: function(err) {
-            console.log(err);
             toastr.error(err.responseJSON.message);
             closeForm();
         }
@@ -50,8 +49,13 @@ function deleteMedia(ajaxUrl)
         url: ajaxUrl,
         type: "POST",
 
+        beforeSend:function(){
+            return confirm("Voulez-vous vraiment supprimer ce média ?");
+        },
+
         success: function (response) {
-            $("#carousel-template").html(response.template);
+            $("#trick-media-template").html(response.template);
+            refreshCarouselControls();
             toastr.success(response.message);
         },
 
@@ -70,8 +74,8 @@ function refreshCarouselControls()
 
     if(prv != null && nxt != null)
     {
-        nxt.addEventListener('click', function() { mediaCrsl.scrollLeft += media.clientWidth; });
-        prv.addEventListener('click', function() { mediaCrsl.scrollLeft -= media.clientWidth; });
+        nxt.addEventListener('click', function() { mediaCrsl.scrollLeft += media.clientWidth + 2; });
+        prv.addEventListener('click', function() { mediaCrsl.scrollLeft -= media.clientWidth + 2; });
     }
 }
 

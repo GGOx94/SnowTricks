@@ -24,14 +24,23 @@ class PictureFormType extends AbstractType
                     'maxSizeMessage' => "L'image est trop volumineuse (max: 10mb)"
                 ]),
             ],
-            'required'=> false
+            'required'=> false,
+            'label' => false
         ]);
+
+        if($options['submit'] === true) {
+            $builder->add('submit', SubmitType::class, [
+                'attr' => [ 'class' => 'btn btn-success' ],
+                'label' => 'Enregistrer'
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Picture::class,
+            'submit' => false
         ]);
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="FR">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}SnowTricks!{% endblock %}</title>
@@ -33,10 +33,10 @@
                             <span class="visually-hidden">(current)</span>
                         </a>
                     </li>
+                    {% if userIsLogged %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_trick_new') }}">Nouveau Trick</a>
                     </li>
-                    {% if userIsLogged %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_profile') }}">{{ 'Connecté : ' ~ app.user.name }}</a>
                     </li>
@@ -48,19 +48,11 @@
                         <a class="nav-link" href="{{ path('app_register') }}">Créer un compte</a>
                     </li>
                     {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_admin') }}">[TMP:ADMIN]</a>
-                    </li>
-{#                    <li class="nav-item dropdown">#}
-{#                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>#}
-{#                        <div class="dropdown-menu">#}
-{#                            <a class="dropdown-item" href="#">Action</a>#}
-{#                            <a class="dropdown-item" href="#">Another action</a>#}
-{#                            <a class="dropdown-item" href="#">Something else here</a>#}
-{#                            <div class="dropdown-divider"></div>#}
-{#                            <a class="dropdown-item" href="#">Separated link</a>#}
-{#                        </div>#}
-{#                    </li>#}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_admin') }}">Administration</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

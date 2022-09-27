@@ -2,27 +2,52 @@
 {% block trickBody %}
 
     <div class="popup-form-container form-video" data-app-url="#">
-        {{ form(formEditVideo) }}
-        <input type="button" value="Upload" onclick="postForm()" />
+        {{ form_start(formEditVideo) }}
+            <div class="form-row">
+                {{ form_row(formEditVideo.embedUrl, {'label' : "Adresse d'une vidéo Youtube ou Dailymotion :"}) }}
+            </div>
+        {{ form_end(formEditVideo) }}
+        <a class="btn btn-info" onclick="postForm()">Confirmer</a>
+        <a class="btn btn-danger" onclick="closeForm()">Annuler</a>
     </div>
 
     <div class="popup-form-container form-picture" data-app-url="#">
-        {{ form(formEditPicture) }}
-        <input type="button" value="Upload" onclick="postForm()" />
+        {{ form_start(formEditPicture) }}
+            <div class="form-row">
+                {{ form_row(formEditPicture.file, {'label' : "Chargez une nouvelle image :"}) }}
+            </div>
+        {{ form_end(formEditPicture) }}
+        <a class="btn btn-info" onclick="postForm()">Confirmer</a>
+        <a class="btn btn-danger" onclick="closeForm()">Annuler</a>
     </div>
 
-    <a class="btn btn-info" onclick="openForm('{{ path('app_trick_add_video', { 'slug' : trick.slug }) }}', 'form-video')">
-        Ajouter une Vidéo
-    </a>
+    <div class="new-medias-buttons">
+        <a class="btn btn-info"
+           onclick="openForm('{{ path('app_trick_add_picture', { 'slug' : trick.slug }) }}', 'form-picture')">
+            Ajouter une Image
+        </a>
+        <a class="btn btn-info"
+           onclick="openForm('{{ path('app_trick_add_video', { 'slug' : trick.slug }) }}', 'form-video')">
+            Ajouter une Vidéo
+        </a>
+    </div>
 
-    <a class="btn btn-info" onclick="openForm('{{ path('app_trick_add_picture', { 'slug' : trick.slug }) }}', 'form-picture')">
-        Ajouter une Image
-    </a>
+    <h3 class="text-center mt-4 mb-2">Modifier le contenu</h3>
 
-    <h3>----------- TRICK EDIT BLOCK ---------</h3>
+    <div class="form-edit-trick">
+        {{  form_start(formEditTrick) }}
+            <div class="small">{{ form_row(formEditTrick.title) }}</div>
+            <div class="description">{{ form_row(formEditTrick.description) }}</div>
+            <div class="small">{{ form_row(formEditTrick.category) }}</div>
+            <div class="buttons">
+                <a class="btn btn-danger" href="{{ path('app_trick_delete', {'slug' : trick.slug}) }}"
+                   onclick="return confirm('Voulez-vous vraiment supprimer ce Trick ?')">Supprimer le Trick
+                </a>
+                {{ form_row(formEditTrick.submit) }}
+            </div>
+        {{  form_end(formEditTrick) }}
+    </div>
 
-    {{  form_start(formEditTrick) }}
 
-    {{  form_end(formEditTrick) }}
 
 {% endblock %}

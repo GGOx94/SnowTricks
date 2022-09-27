@@ -1,17 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer un compte Snowtricks{% endblock %}
+{% block title %}Créer un compte{% endblock %}
 
 {% block body %}
+<div class="container">
+
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Créer un compte utilisateur SnowTricks</h1>
+    <h1 class="text-center my-5 fw-bolder">Créer un compte</h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.name) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword) }}
-    {{ form_end(registrationForm) }}
+    <div class="d-flex justify-content-center">
+        <div class="col-md-4 col-sm-8">
+            {{ form_start(registrationForm) }}
+                {{ form_row(registrationForm.name) }}
+                {{ form_row(registrationForm.email) }}
+                {{ form_row(registrationForm.plainPassword) }}
+                <div class="text-center">{{ form_row(registrationForm.submit) }}</div>
+            {{ form_end(registrationForm) }}
+        </div>
+    </div>
+
+</div>
 {% endblock %}

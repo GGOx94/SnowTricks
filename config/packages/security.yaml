@@ -42,7 +42,8 @@ security:
          - { path: ^/admin, roles: ROLE_ADMIN }
          - { path: ^/user, roles: ROLE_ADMIN }
          - { path: ^/profile, roles: ROLE_USER }
-         - { path: ^/trick/edit, roles: ROLE_USER }
+         - { path: ^/trick/.+/edit$, roles: ROLE_USER }
+         - { path: ^/trick/new$, roles: ROLE_USER }
 
 when@test:
     security:

@@ -23,10 +23,13 @@ class VideoFormType extends AbstractType
                         new Assert\Regex("/{$matchYoutube}/"),
                         new Assert\Regex("/{$matchDailyM}/")
                     ],
-                        message:"L'url de la vidéo est invalide, veuillez copier-coller l'url d'une vidéo Youtube ou Dailymotion",
+                        message:"L'URL de la vidéo est invalide, veuillez insérer l'URL d'une vidéo Youtube ou Dailymotion.",
+                        includeInternalMessages: false
                     ),
             ],
-            'required' => false
+            'required' => false,
+            'label' => $options['label'],
+            'attr'=>['placeholder' => "Entrez l'URL d'une vidéo Youtube ou Dailymotion"]
         ]);
     }
 
@@ -34,6 +37,7 @@ class VideoFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Video::class,
+            'label' => false
         ]);
     }
 }

@@ -1,17 +1,30 @@
 .trick-container {
     padding-top: 5vh;
 }
-.hero {
-    position: relative;
-    background-color: #3c9b5f;
+
+.new-medias-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1em 0;
 }
-.hero .title {
-    position: absolute;
-    top:45%;
+
+.trick-infos {
+    display: flex;
+    gap: 2em;
+    width: 100%;
+    justify-content: center;
 }
-.hero .picture {
-    width:100%;
-    max-height: 600px;
+
+.trick-infos p {
+    border: 1px solid black;
+    padding: 0.5em;
+}
+
+.comment-form .row {
+    display: flex;
+    align-items: center;
+    gap: 1em;
 }
 
 .comments {
@@ -19,27 +32,133 @@
     flex-direction: column;
     gap:1em;
 }
+
 .comment {
     display: flex;
     align-items: flex-start;
 }
+
 .comment .author {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
 .comment .content {
     position:relative;
     margin: 0;
-    padding: 0;
+    padding: 0.5em;
     border: black solid thin;
-    min-height:80px;
+    min-height: 80px;
 }
-.comment small {
+
+.content .created-at {
     position:absolute;
-    right:0;
-    bottom: 0;
+    right: 2%;
+    bottom: 4%;
     color: #a4a4a4;
 }
 
 .comment img {
     width: 50px;
     height: 50px;
+}
+
+.form-edit-trick .description textarea {
+    min-height: 25vh;
+}
+
+.form-edit-trick .buttons {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 2em;
+}
+
+.form-edit-trick .small {
+    max-width: 25%;
+}
+
+@media only screen and (max-width: 768px) {
+    /*** Trick ***/
+    .trick-description {
+        width: 90vw;
+    }
+
+    .trick-infos {
+        display: flex;
+        gap: 1rem;
+        width: 100%;
+        justify-content: space-evenly;
+    }
+
+    .trick-infos p {
+        border: 1px solid black;
+        padding: 0.2rem;
+        font-size: smaller;
+    }
+
+    /*** Comment Form ***/
+    .comment-form .row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5em;
+    }
+
+    .comment-form .row .col-6 {
+        width: 90%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .comment-form .row .col-2 {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /*** Comments ***/
+    .comments {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 95vw;
+        margin: 0;
+        padding: 0;
+    }
+
+    .comment {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        min-height: 80px;
+        gap: 1rem;
+        margin: 0;
+        font-size: smaller;
+    }
+
+    .content .created-at {
+        right: 1%;
+        bottom: 0;
+    }
+
+    /*** Trick Edit ***/
+    .form-edit-trick .description textarea {
+        min-height: 15vh;
+    }
+
+    .form-edit-trick .buttons {
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 2em;
+    }
+
+    .form-edit-trick .small {
+        max-width: 75%;
+    }
 }

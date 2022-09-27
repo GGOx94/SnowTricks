@@ -55,7 +55,9 @@ class LoginController extends AbstractController
     public function forgotPassword(UserRepository $userRepo, Request $req) : Response
     {
         $form = $this->createFormBuilder()
-            ->add('username', TextType::class, [ 'label' => "Nom d'utilisateur" ])
+            ->add('username', TextType::class, [
+                'label' => false,
+                'attr' => ['placeholder' => "Nom d'utilisateur"] ])
             ->add('submit', SubmitType::class, [
                     'attr' => [ 'class' => 'btn btn-success'],
                     'label' => "Demander un nouveau mot de passe"])

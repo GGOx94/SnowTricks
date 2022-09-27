@@ -1,45 +1,55 @@
 {% extends 'trick/main.html.twig' %}
 {% block trickBody %}
 
-    <p>
-        {{ trick.description|raw }}
-    </p>
+    <div class="row justify-content-center mt-4 mb-4">
+        <p class="col-8 trick-description">
+            {{ trick.description|nl2br }}
+        </p>
+    </div>
 
-    <div>
-        <small>Groupe : {{ trick.category.label }} - </small>
-        <small>Trick créé le : {{ trick.createdAt|date("d/m/Y") }}</small>
+    <div class="trick-infos">
+        <p>Groupe : {{ trick.category.label }}</p>
+        <p>Créé le : {{ trick.createdAt|date("d/m/Y") }}</p>
         {% if trick.modifiedAt %}
-            <small>Trick créé le : {{ trick.modifiedAt|date("d/m/Y") }}</small>
+            <p><i>Modifié le : {{ trick.modifiedAt|date("d/m/Y") }}</i></p>
         {% endif %}
     </div>
 
-    {# If user is logged-in #}
+    {# If user is logged-in, display comment form #}
     {% if app.user.name is defined %}
-
-        <div> {# TODO see wireframes to place edit / delete buttons #}
-            <a class='btn btn-info' href="{{ path('app_trick_edit', { 'slug': trick.slug }) }}">Modifier</a>
-            <a class='btn btn-danger' href="{{ path('app_trick_delete', { 'slug': trick.slug }) }}">Supprimer</a>
-        </div>
-
         <hr>
-        <h3>Poster un commentaire</h3>
-        {{ form(commentForm) }}
+        {% if comments|length == 0 %}
+            <h3 class="text-center">Soyez le premier à commenter !</h3>
+        {% endif %}
+        <div class="comment-form">
+            {{ form_start(commentForm) }}
+            <div class="row justify-content-center">
+                <div class="col-6">
+                    {{ form_widget(commentForm.content) }}
+                </div>
+                <div class="col-2">
+                    {{ form_widget(commentForm.submit) }}
+                </div>
+            </div>
+            {{ form_end(commentForm) }}
+        </div>
         <hr>
 
     {% endif %}
 
 
-    {% if trick.comments|length > 0 %}
-
-        <h2> Commentaires postés</h2>
-        <hr>
+    {% if comments|length > 0 %}
+        <h2 class="text-center mt-2 mb-4">Commentaires postés</h2>
 
         <div id="trick-comments" class="comments mx-auto col-8">
             {% include('trick/comments.htmL.twig') %}
         </div>
 
-        {# TODO BUTTON HERE #}
-        <a id="load-more-btn" class="text-center" onclick="loadMoreComments()">[LOAD MORE]</a>
+        {% if comments|length == 10 %}
+            <div class="text-center w-100 mt-3">
+                <a id="load-more-btn" class="btn btn-info" onclick="loadMoreComments('{{ trick.slug }}')">Charger plus de commentaires</a>
+            </div>
+        {% endif %}
     {% endif %}
 
 {% endblock %}
