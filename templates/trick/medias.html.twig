@@ -1,4 +1,4 @@
-{% set showCarouselControls = ((trick.pictures|length - 1 + trick.videos|length) > 4) %}
+{% set showCarouselControls = ((trick.pictures|length - 1 + trick.videos|length) > 5) %}
 {% set editMode = (trick.slug ~ '/edit') in app.request.uri %}
 {% set useDefaultPic = trick.pictures is empty %}
 
