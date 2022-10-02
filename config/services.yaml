@@ -6,8 +6,8 @@
 parameters:
     avatars_uri: '/uploads/avatars/'
     tricks_pics_uri: '/uploads/pictures/'
-    avatars_dir: '%kernel.project_dir%/public/%avatars_uri%'
-    tricsk_pics_dir: '%kernel.project_dir%/public/%tricks_pics_uri%'
+    avatars_dir: '%kernel.project_dir%/public%avatars_uri%'
+    tricks_pics_dir: '%kernel.project_dir%/public%tricks_pics_uri%'
 
 services:
     # default configuration for services in *this* file
@@ -27,7 +27,7 @@ services:
     App\Service\FileManager:
         arguments:
             $avatarsDir: '%avatars_dir%'
-            $tricksDir: '%tricsk_pics_dir%'
+            $tricksDir: '%tricks_pics_dir%'
 
     App\Controller\TrickController:
         arguments:
@@ -36,6 +36,10 @@ services:
     App\Controller\TrickJsonController:
         arguments:
             $picturesUri: '%tricks_pics_uri%'
+
+    App\DataFixtures\RunFixtures:
+        arguments:
+            $tricksPicsDir: '%tricks_pics_dir%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

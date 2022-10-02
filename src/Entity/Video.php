@@ -20,8 +20,7 @@ class Video
     #[ORM\Column(type: 'string', length: 80)]
     private string $embedUrl;
 
-    // Those properties are used in the embedded url builder function
-    // and the constraints of the VideoFormType
+    // Those properties are used in the setEmbedUrl() function and the constraints of the VideoFormType
     public const ytUrlStart = "https://www.youtube.com/watch?v=";
     public const dlUrlStart = "https://www.dailymotion.com/video/";
 

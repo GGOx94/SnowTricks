@@ -6,7 +6,7 @@
             <p>{{ com.author.name }}</p>
         </div>
         <div class="content col-8">
-            <p class="text-break">{{ com.content }}</p>
+            <p class="text-break">{{ com.content|nl2br }}</p>
             <small class="created-at">Publié le : {{ com.createdAt|date("d/m/Y") }}</small>
         </div>
     </div>

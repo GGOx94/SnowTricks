@@ -1,10 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Erreur sur cette page</h1>
+    <h1 class="text-center mt-5 mb-4">Erreur sur cette page</h1>
 
-    <p>
-        Une erreur s'est produite à l'affichage de cette page.<br/>
-        <a href="{{ path('app_home') }}">Retourner à l'accueil</a>.
-    </p>
+    <div class="d-flex justify-content-center">
+        <p class="col-md-5 col-sm-8 text-center">
+            Une erreur s'est produite à l'affichage de cette page.<br/>
+            <a href="{{ path('app_home') }}">Retourner à l'accueil</a>.
+        </p>
+    </div>
 {% endblock %}
