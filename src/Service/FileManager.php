@@ -15,7 +15,7 @@ class FileManager
     private string $avatarsDir;
     private string $tricksDir;
 
-    public function __construct(SluggerInterface $slugger, Filesystem $filesystem, $avatarsDir, string $tricksDir)
+    public function __construct(SluggerInterface $slugger, Filesystem $filesystem, string $avatarsDir, string $tricksDir)
     {
         $this->slugger = $slugger;
         $this->filesystem = $filesystem;

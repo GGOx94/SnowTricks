@@ -27,7 +27,7 @@ class Trick
     private string $description;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $createdAt;
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private \DateTime $modifiedAt;

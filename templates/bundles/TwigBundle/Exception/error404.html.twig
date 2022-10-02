@@ -1,10 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Page introuvable</h1>
-    {{ _context.exception.message }}
-    <p>
-        La page demandée n'existe pas ou a été supprimée.<br/>
-        Vérifiez l'URL ou <a href="{{ path('app_home') }}">retournez à l'accueil</a>.
-    </p>
+
+    <h1 class="text-center mt-5 mb-4">Page introuvable</h1>
+
+    <div class="d-flex justify-content-center">
+        <p class="col-md-5 col-sm-8 text-center">
+            {{ _context.exception.message }}<br/>
+
+            La page demandée n'existe pas ou a été supprimée.<br/>
+            Vérifiez l'URL ou <a href="{{ path('app_home') }}">retournez à l'accueil</a>.
+        </p>
+    </div>
 {% endblock %}

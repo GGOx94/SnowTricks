@@ -1,3 +1,7 @@
 .navbar-nav {
   margin-left: auto !important;
 }
+
+img {
+  object-fit: cover;
+}
