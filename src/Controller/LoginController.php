@@ -18,6 +18,7 @@ class LoginController extends AbstractController
 {
     private JWTokenSvc $tokenSvc;
     private MailerInterface $mailer;
+
     public function __construct(JWTokenSvc $tokenSvc, MailerInterface $mailer)
     {
         $this->tokenSvc = $tokenSvc;
@@ -73,8 +74,9 @@ class LoginController extends AbstractController
 
             if(!empty($user) && $user->isVerified())
             {
+                $secret = $this->getParameter('jwtoken_secret');
                 $expireHours = 2;
-                $token = $this->tokenSvc->create(['user_email' => $user->getEmail()], $_ENV['JWTOKEN_SECRET'], $expireHours);
+                $token = $this->tokenSvc->create(['user_email' => $user->getEmail()], $secret, $expireHours);
 
                 $email = (new TemplatedEmail())
                     ->from('reset_password@p6snowtricks.oc')

@@ -26,23 +26,15 @@ class TrickController extends AbstractController
 {
     protected FileManager $fileManager;
     protected EntityManagerInterface $manager;
-    protected RequestStack $requestStack;
 
     protected EntityRepository $repo;
-    protected string $picturesUri;
 
-    public function __construct(
-        FileManager $fileManager,
-        EntityManagerInterface $entityManager,
-        RequestStack $requestStack,
-        string $picturesUri)
+    public function __construct(FileManager $fileManager, EntityManagerInterface $entityManager)
     {
         $this->fileManager = $fileManager;
         $this->manager = $entityManager;
-        $this->requestStack = $requestStack;
 
         $this->repo = $entityManager->getRepository(Trick::class);
-        $this->picturesUri = $picturesUri;
     }
 
     #[Route('/trick/new', name: 'app_trick_new')]
@@ -110,10 +102,11 @@ class TrickController extends AbstractController
 
         $editPicForm = $this->createForm(PictureFormType::class);
         $editVidForm = $this->createForm(VideoFormType::class);
+        $picturesUri = $this->getParameter('tricks_pics_uri');
 
         return $this->render('trick/edit.html.twig', [
             'trick' => $trick,
-            'picturesUri' => $this->picturesUri,
+            'picturesUri' => $picturesUri,
             'formEditTrick' => $editTrickForm->createView(),
             'formEditPicture' => $editPicForm->createView(),
             'formEditVideo' => $editVidForm->createView(),

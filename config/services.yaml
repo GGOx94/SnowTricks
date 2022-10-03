@@ -8,6 +8,7 @@ parameters:
     tricks_pics_uri: '/uploads/pictures/'
     avatars_dir: '%kernel.project_dir%/public%avatars_uri%'
     tricks_pics_dir: '%kernel.project_dir%/public%tricks_pics_uri%'
+    jwtoken_secret: '%env(JWTOKEN_SECRET)%'
 
 services:
     # default configuration for services in *this* file
@@ -28,14 +29,6 @@ services:
         arguments:
             $avatarsDir: '%avatars_dir%'
             $tricksDir: '%tricks_pics_dir%'
-
-    App\Controller\TrickController:
-        arguments:
-            $picturesUri: '%tricks_pics_uri%'
-
-    App\Controller\TrickJsonController:
-        arguments:
-            $picturesUri: '%tricks_pics_uri%'
 
     App\DataFixtures\RunFixtures:
         arguments:

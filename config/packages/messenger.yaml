@@ -16,7 +16,7 @@ framework:
             # sync: 'sync://'
 
         routing:
-            #Symfony\Component\Mailer\Messenger\SendEmailMessage: async #TODO: check why async not working ? or simply too slow to send queued mails
+            #Symfony\Component\Mailer\Messenger\SendEmailMessage: async
             Symfony\Component\Notifier\Message\ChatMessage: async
             Symfony\Component\Notifier\Message\SmsMessage: async
 

@@ -22,7 +22,10 @@ class RegistrationController extends AbstractController
     private MailerInterface $mailer;
     private JWTokenSvc $tokenSvc;
 
-    public function __construct(Security $security, MailerInterface $mailer, JWTokenSvc $tokenSvc)
+    public function __construct(
+        Security $security,
+        MailerInterface $mailer,
+        JWTokenSvc $tokenSvc)
     {
         $this->security = $security;
         $this->mailer = $mailer;
@@ -32,6 +35,8 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
+        $secret = $this->getParameter('jwtoken_secret');
+
         // This prevents a bug when a logged-in user try to register & click on its registration link in email
         // Register page link is disabled from navbar if user is logged, this should only happen when user access the register route manually
         if($this->security->getUser() != null) {
@@ -55,7 +60,7 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             $expireHours = 2;
-            $token = $this->tokenSvc->create(['user_email' => $user->getEmail()], $_ENV['JWTOKEN_SECRET'], $expireHours);
+            $token = $this->tokenSvc->create(['user_email' => $user->getEmail()], $secret, $expireHours);
 
             $email = (new TemplatedEmail())
                 ->from('no-reply@p6snowtricks.oc')
@@ -78,8 +83,9 @@ class RegistrationController extends AbstractController
     #[Route('/verify-email/{token}', name: 'app_verify_email_token', methods: ['GET'])]
     public function verifyUserEmail(string $token, UserRepository $userRepo, EntityManagerInterface $manager): Response
     {
+        $secret = $this->getParameter('jwtoken_secret');
         // Invalid token (regex mismatch or forged token with wrong secret key)
-        if(!$this->tokenSvc->isRegexValid($token) || !$this->tokenSvc->check($token, $_ENV['JWTOKEN_SECRET'])) {
+        if(!$this->tokenSvc->isRegexValid($token) || !$this->tokenSvc->check($token, $secret)) {
             $this->addFlash('error', 'Le token de vérification est invalide');
             return $this->redirectToRoute('app_home');
         }

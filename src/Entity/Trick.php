@@ -54,7 +54,7 @@ class Trick
     }
 
     #[ORM\PreUpdate]
-    public function updateModifiedAt(PreUpdateEventArgs $eventArgs): void
+    public function updateModifiedAt(): void
     {
         $this->modifiedAt = new \DateTime();
     }
