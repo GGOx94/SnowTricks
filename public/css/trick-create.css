@@ -1,33 +1,33 @@
 #submit-btn {
-    justify-content: center;
-    text-align: center;
-    width: 100%;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
 }
 
 #submit-btn button {
-    padding: 0.5rem 1rem;
-    font-size: 16pt;
+  padding: 0.5rem 1rem;
+  font-size: 16pt;
 }
 
 .form-row {
-    padding: 1rem 1rem 0 1rem;
+  padding: 1rem 1rem 0 1rem;
 }
 
 .form-row.small {
-    max-width: 400px;
+  max-width: 400px;
 }
 
-.form-row textarea{
-    min-height: 20vh;
+.form-row textarea {
+  min-height: 20vh;
 }
 
 .form-row label {
-    font-size: 14pt;
-    font-weight: bold;
+  font-size: 14pt;
+  font-weight: bold;
 }
 
 .tip {
-    font-style: italic;
-    font-size: small;
-    color: dimgrey;
+  font-style: italic;
+  font-size: small;
+  color: dimgrey;
 }

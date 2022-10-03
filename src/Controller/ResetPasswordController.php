@@ -27,8 +27,9 @@ class ResetPasswordController extends AbstractController
     #[Route('/reset-password/{token}', name: 'app_reset_password_token')]
     public function resetPassword(Request $req, string $token, UserPasswordHasherInterface $usrPswdHasher,): Response
     {
+        $secret = $this->getParameter('jwtoken_secret');
         // Invalid token (regex mismatch or forged token with wrong secret key)
-        if(!$this->tokenSvc->isRegexValid($token) || !$this->tokenSvc->check($token, $_ENV['JWTOKEN_SECRET'])) {
+        if(!$this->tokenSvc->isRegexValid($token) || !$this->tokenSvc->check($token, $secret)) {
             $this->addFlash('error', 'Le token de réinitialisation de mot de passe est invalide');
             return $this->redirectToRoute('app_home');
         }

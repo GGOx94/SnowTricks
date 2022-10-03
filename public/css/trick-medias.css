@@ -1,199 +1,194 @@
 .hero {
-    position: relative;
-    background-color: black;
+  position: relative;
+  background-color: black;
 }
 
 .hero .picture {
-    width:100%;
-    max-height: 600px;
-    border: 1px solid black;
-    opacity: 0.6;
-    z-index: 5;
+  width: 100%;
+  max-height: 600px;
+  border: 1px solid black;
+  opacity: 0.6;
+  z-index: 5;
 }
 
 .hero .title {
-    position: absolute;
-    top:45%;
-    color: whitesmoke;
-    z-index: 6;
+  position: absolute;
+  top: 45%;
+  color: whitesmoke;
+  z-index: 6;
 }
 
 .trick-media-list-button {
-    display: none;
+  display: none;
 }
 
 .trick-media-list {
-    display: none;
+  display: none;
 }
 
 .carousel-container {
-    display: flex;
-    justify-items: center;
-    gap: 1em;
-    padding: 1em 2em;
-}
-
-.trick-media-carousel {
-    display: flex;
-    justify-items: center;
+  display: flex;
+  justify-items: center;
+  gap: 1em;
+  padding: 1em 2em;
 }
 
 #btn-prev, #btn-next {
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    color: #0d92bd;
-    font-size: 2rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  color: #0d92bd;
+  font-size: 2rem;
 }
 
 .trick-media-carousel {
-    display: flex;
-    justify-items: center;
-    overflow-x: scroll;
-    scroll-behavior: smooth;
-    width: 100%;
+  display: flex;
+  justify-items: center;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  width: 100%;
 }
 
 .trick-media-carousel::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .media {
-    position: relative;
-    flex-basis: 20%; /* Allow for 4 medias displayed on carousel */
-    flex-shrink: 0;
-    border: 1px solid black;
-    line-height: 0; /* Fix bottom padding on iframes */
+  position: relative;
+  flex-basis: 20%; /* Allow for 4 medias displayed on carousel */
+  flex-shrink: 0;
+  border: 1px solid black;
+  line-height: 0; /* Fix bottom padding on iframes */
 }
 
 .media-pic, .media-embed-vid {
-    width: 100%;
-    height: 180px;
+  width: 100%;
+  height: 180px;
 }
 
 .media-controls {
-    position: absolute;
-    display: flex;
-    right: 0.5rem;
-    gap: 0.5rem;
-    top: 0.25rem;
-    z-index: 5;
+  position: absolute;
+  display: flex;
+  right: 0.5rem;
+  gap: 0.5rem;
+  top: 0.25rem;
+  z-index: 5;
 }
 
 .media-controls a {
-    text-decoration: none !important;
+  text-decoration: none;
 }
 
 .media-controls a img {
-    width: 100%;
-    height: 24px;
-    border-radius: 50%;
-    border: blue 1px solid;
-    cursor: pointer;
+  width: 100%;
+  height: 24px;
+  border-radius: 50%;
+  border: blue 1px solid;
+  cursor: pointer;
 }
 
 .popup-form-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 50%;
-    max-width: 500px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  max-width: 500px;
 
-    display: none;
+  display: none;
 
-    border: 2px solid black;
-    border-radius: 20px;
-    background-color: white;
-    z-index: 9;
-    padding: 2rem;
+  border: 2px solid black;
+  border-radius: 20px;
+  background-color: white;
+  z-index: 9;
+  padding: 2rem;
 }
 
 .popup-form-container .form-row label {
-    font-weight: bold;
-    font-size: 14pt;
-    margin-bottom: 15px;
+  font-weight: bold;
+  font-size: 14pt;
+  margin-bottom: 15px;
 }
 
 /*** Trick Pictures Overlay on click ***/
 .overlay {
-    position: fixed;
-    z-index: 99;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity .3s;
+  position: fixed;
+  z-index: 99;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .3s;
 }
 
-.overlay-container img{
-    max-width: 90vw;
-    max-height: 90vh;
-    width: auto;
-    height: auto;
-    min-width: 40vw;
-    min-height: 40vh;
-    transform: scale(.9);
-    transition: transform .3s;
+.overlay-container img {
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  min-width: 40vw;
+  min-height: 40vh;
+  transform: scale(.9);
+  transition: transform .3s;
 }
 
 .overlay:target {
-    visibility: visible;
-    outline: none;
-    cursor: default;
-    opacity: 1;
+  visibility: visible;
+  outline: none;
+  cursor: default;
+  opacity: 1;
 }
 
 .overlay:target img {
-    transform: scale(1);
+  transform: scale(1);
 }
 
 @media only screen and (max-width: 768px) {
-    /*** Trick Medias ***/
-    .carousel-container {
-        display: none;
-    }
+  /*** Trick Medias ***/
+  .carousel-container {
+    display: none;
+  }
 
-    .trick-media-list-button {
-        display: block;
-    }
+  .trick-media-list-button {
+    display: block;
+  }
 
-    .trick-media-list {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 1rem;
-        margin-top: 1rem;
-    }
+  .trick-media-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
 
-    .trick-media-list .media {
-        width: 80vw;
-        align-self: center;
-    }
+  .trick-media-list .media {
+    width: 80vw;
+    align-self: center;
+  }
 
-    /*** Medias Edit ***/
-    .popup-form-container {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 95vw;
-        border: 1px solid black;
-        background-color: white;
-        z-index: 9;
-        padding: 1rem;
-    }
+  /*** Medias Edit ***/
+  .popup-form-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95vw;
+    border: 1px solid black;
+    background-color: white;
+    z-index: 9;
+    padding: 1rem;
+  }
 
-    .popup-form-container .form-row label {
-        font-weight: bold;
-        font-size: 14pt;
-        margin-bottom: 15px;
-    }
+  .popup-form-container .form-row label {
+    font-weight: bold;
+    font-size: 14pt;
+    margin-bottom: 15px;
+  }
 }
