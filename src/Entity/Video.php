@@ -55,7 +55,12 @@ class Video
 
         if(str_contains($videoUrl, self::ytUrlStart))
         {
-            $vidId = trim($videoUrl, self::ytUrlStart);
+            $chanPos = strpos($videoUrl, "&ab_channel");
+            if($chanPos !== false) {
+                $videoUrl = substr($videoUrl, 0, $chanPos);
+            }
+
+            $vidId = str_replace(self::ytUrlStart, "", $videoUrl);
             $this->embedUrl = ("https://www.youtube.com/embed/" . $vidId);
         }
         elseif (str_contains($videoUrl, self::dlUrlStart))

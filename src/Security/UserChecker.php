@@ -13,6 +13,9 @@ class UserChecker implements UserCheckerInterface
         if ($user->isBanned()) {
             throw new CustomUserMessageAuthenticationException("Votre compte a été banni par un administrateur.");
         }
+        if (!$user->isVerified()) {
+            throw new CustomUserMessageAuthenticationException("Votre compte n'est pas encore vérifié, regardez votre boîte mail !");
+        }
     }
 
     public function checkPostAuth(UserInterface $user)
