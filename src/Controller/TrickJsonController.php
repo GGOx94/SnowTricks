@@ -146,9 +146,11 @@ class TrickJsonController extends TrickController
 
     private function buildJsonResponse(Trick $trick, string $message = null) : JsonResponse
     {
+        $picturesUri = $this->getParameter('tricks_pics_uri');
+
         $template = $this->render('trick/medias.html.twig', [
                 'trick' => $trick,
-                'picturesUri' => $this->picturesUri
+                'picturesUri' => $picturesUri
             ])->getContent();
 
         $response = (new JsonResponse())->setStatusCode(200);
