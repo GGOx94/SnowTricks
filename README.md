@@ -32,5 +32,6 @@ Le site est alors accessible, par défaut sur : http://localhost:8000
 Les comptes utilisateurs de test sont 
 >john.doe@gmail.com / Secret123
 >jane.doe@gmail.com / Secret123
+
 Le compte administrateur de test est 
 >admin@p6.oc / Secret123
