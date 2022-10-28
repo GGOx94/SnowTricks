@@ -35,7 +35,8 @@
     <h3 class="text-center mt-4 mb-2">Modifier le contenu</h3>
 
     <div class="form-edit-trick">
-        {{  form_start(formEditTrick) }}
+        {{ form_start(formEditTrick) }}
+        {{ form_errors(formEditTrick) }}
             <div class="small">{{ form_row(formEditTrick.title) }}</div>
             <div class="description">{{ form_row(formEditTrick.description) }}</div>
             <div class="small">{{ form_row(formEditTrick.category) }}</div>

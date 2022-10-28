@@ -7,12 +7,14 @@ use App\Form\CommentFormType;
 use App\Form\PictureFormType;
 use App\Form\TrickFormType;
 use App\Form\VideoFormType;
+use App\Repository\TrickRepository;
 use App\Service\FileManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -24,18 +26,11 @@ use App\Entity\Trick;
 
 class TrickController extends AbstractController
 {
-    protected FileManager $fileManager;
-    protected EntityManagerInterface $manager;
-
-    protected EntityRepository $repo;
-
-    public function __construct(FileManager $fileManager, EntityManagerInterface $entityManager)
-    {
-        $this->fileManager = $fileManager;
-        $this->manager = $entityManager;
-
-        $this->repo = $entityManager->getRepository(Trick::class);
-    }
+    public function __construct(
+        readonly FileManager            $fileManager,
+        readonly EntityManagerInterface $manager,
+        readonly TrickRepository        $repo
+    ) {}
 
     #[Route('/trick/new', name: 'app_trick_new')]
     public function create(Request $request): Response
@@ -75,21 +70,29 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{slug}/edit', name: 'app_trick_edit')]
-    public function edit(string $slug, Request $request): Response
+    public function edit(Trick $trick, Request $request): Response
     {
-        $trick = $this->repo->findOneOr404(['slug' => $slug]);
-
         $editTrickForm = $this->createForm(TrickFormType::class, $trick, [ 'edit_mode' => true ]);
-
+        // Keep a copy of the original Trick title before handleRequest(), in case of slug conflicts : see below
+        $baseTrickTitle = $trick->getTitle();
         $editTrickForm->handleRequest($request);
 
         if($editTrickForm->isSubmitted() && $editTrickForm->isValid())
         {
+            // Generate a slug in case title has changed and check for conflicts on existing tricks
+            $slug = (new AsciiSlugger())->slug($trick->getTitle());
+            $existing = $this->repo->findBy(['slug' => $slug]);
+            if( !empty($existing) )
+            {
+                $this->addFlash("error", "Ce titre est indisponible !");
+                $editTrickForm->addError(new FormError("Ce titre est indisponible !"));
+                return $this->renderTrickEditPage($trick->setTitle($baseTrickTitle), $editTrickForm);
+            }
+
             $slug = (new AsciiSlugger())->slug($trick->getTitle());
             $oldSlug = $trick->getSlug();
             $trick->setSlug($slug);
 
-            $this->manager->persist($trick);
             $this->manager->flush();
 
             // If we modified the title (changing its slug), we need to rename its pictures directory too
@@ -100,6 +103,11 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('app_trick', [ 'slug' => $slug ]);
         }
 
+        return $this->renderTrickEditPage($trick, $editTrickForm);
+    }
+
+    private function renderTrickEditPage(Trick $trick, FormInterface $editTrickForm) : Response
+    {
         $editPicForm = $this->createForm(PictureFormType::class);
         $editVidForm = $this->createForm(VideoFormType::class);
         $picturesUri = $this->getParameter('tricks_pics_uri');
