@@ -52,6 +52,22 @@ class TrickRepository extends ServiceEntityRepository
         return $trick;
     }
 
+    public function findDuplicate(string $slug, int $id = null) : bool
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->where('t.slug = :slug')
+            ->setParameter('slug', $slug);
+
+        // If a Trick ID is given, ignore that entry in the request and find other tricks slugs
+        if($id !== null) {
+            $qb->andWhere('t.id != :id')
+                ->setParameter('id', $id);
+        }
+
+        $rslt = $qb->getQuery()->getResult();
+        return !empty($rslt);
+    }
+
 //    /**
 //     * @return Trick[] Returns an array of Trick objects
 //     */
