@@ -27,9 +27,9 @@ use App\Entity\Trick;
 class TrickController extends AbstractController
 {
     public function __construct(
-        readonly FileManager            $fileManager,
-        readonly EntityManagerInterface $manager,
-        readonly TrickRepository        $repo
+        protected readonly FileManager            $fileManager,
+        protected readonly EntityManagerInterface $manager,
+        protected readonly TrickRepository        $repo
     ) {}
 
     #[Route('/trick/new', name: 'app_trick_new')]
@@ -81,15 +81,14 @@ class TrickController extends AbstractController
         {
             // Generate a slug in case title has changed and check for conflicts on existing tricks
             $slug = (new AsciiSlugger())->slug($trick->getTitle());
-            $existing = $this->repo->findBy(['slug' => $slug]);
-            if( !empty($existing) )
+            $existing = $this->repo->findDuplicate($slug, $trick->getId());
+            if( $existing )
             {
                 $this->addFlash("error", "Ce titre est indisponible !");
                 $editTrickForm->addError(new FormError("Ce titre est indisponible !"));
                 return $this->renderTrickEditPage($trick->setTitle($baseTrickTitle), $editTrickForm);
             }
 
-            $slug = (new AsciiSlugger())->slug($trick->getTitle());
             $oldSlug = $trick->getSlug();
             $trick->setSlug($slug);
 
