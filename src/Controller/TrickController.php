@@ -12,6 +12,7 @@ use App\Service\FileManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -133,6 +134,17 @@ class TrickController extends AbstractController
         $this->addFlash('success', 'Le trick "'.$trick->getTitle().'" a bien été supprimé');
 
         return $this->redirectToRoute('app_home');
+    }
+
+    // TEST HTMX
+    #[Route('/trick/{slug}/htmx-desc-test', name: "app_htmx_trick_desc")]
+    public function testHtmxDescription(string $slug, Request $request, LoggerInterface $logger): Response
+    {
+        sleep(2);
+        $logger->info("POUET");
+        $trick = $this->repo->findOneOr404(['slug' => $slug]);
+        $desc = $trick->getDescription();
+        return new Response($this->renderView('trick/test-htmx-desc.html.twig', ["desc" => $desc]));
     }
 
     #[Route('/trick/{slug}', name: 'app_trick')]

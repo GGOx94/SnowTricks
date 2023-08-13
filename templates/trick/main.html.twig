@@ -5,6 +5,20 @@
     <link rel="stylesheet" href="{{ asset('css/trick-medias.css')}}"/>
     <script src="{{ asset('js/trick-medias.js') }}"></script>
     <script src="{{ asset('js/comments.js') }}"></script>
+
+    {# TEST HTMX #}
+    <script src="{{ asset('js/htmx.min.js') }}"></script>
+    <script src="{{ asset('js/htmx-ext-disable.js') }}"></script> {# Disable html elements while request is ongoing #}
+    <style>
+        .htmx-indicator {
+          display: none;
+        }
+        .htmx-request .htmx-indicator {
+          display: inline-block;
+
+        }
+    </style>
+
 {% endblock %}
 
 {% block title %}{{ trick.title }}{% endblock %}
@@ -13,7 +27,28 @@
 
     <div class="trick-container container">
         <div id="trick-media-template">
-            {% include('trick/medias.html.twig') %}
+{#            {% include('trick/medias.html.twig') %}#}
+        </div>
+
+        {# TEST HTMX #}
+        <div class="text-center my-5" hx-ext="disable-element">
+            <h2>Test HTMX</h2>
+            <div>
+                <button class="btn btn-primary" hx-get="{{ path('app_htmx_trick_desc', {'slug' : trick.slug}) }}"
+                   hx-swap="innerHTML" hx-target="#htmx-trick-desc-results" hx-disable-element="self">
+                    Load Description
+                    &nbsp;<span class="spinner-border spinner-border-sm htmx-indicator" role="status" aria-hidden="true" ></span>
+                </button>
+
+            </div>
+            <div id="htmx-trick-desc-results">
+            </div>
+
+            {# TEST HTMX SSE, voir https://symfony.com/doc/current/mercure.html #}
+{#            <div hx-sse="connect:/{{ path('app_htmx_sse') }}">#}
+{#                <div hx-trigger="sse:test_sse_htmx" hx-get="/get_content_on_sse_event_url_test"></div>#}
+{#            </div>#}
+
         </div>
 
         {% block trickBody %}{% endblock %}
